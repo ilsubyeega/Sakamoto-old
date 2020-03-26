@@ -7,6 +7,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sakamoto", "Sakamoto\Sakamo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Shared", "osu.Shared\osu.Shared\osu.Shared.csproj", "{E6A75F35-A6B2-4476-8550-679E43E7CB23}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Osu", "osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj", "{26586B18-F1E9-4B38-94ED-42DCED9E2FBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{B7A0E618-313C-4300-868F-3823CB692AEE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Catch", "osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj", "{BDC39F99-872D-4628-A01A-C483A8D6E394}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Mania", "osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj", "{A62A0C66-F729-432E-A190-4E60A062F648}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Taiko", "osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj", "{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game", "osu\osu.Game\osu.Game.csproj", "{BC4BF12C-D8B4-4484-8412-394C825A25AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +33,37 @@ Global
 		{E6A75F35-A6B2-4476-8550-679E43E7CB23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6A75F35-A6B2-4476-8550-679E43E7CB23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6A75F35-A6B2-4476-8550-679E43E7CB23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26586B18-F1E9-4B38-94ED-42DCED9E2FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26586B18-F1E9-4B38-94ED-42DCED9E2FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26586B18-F1E9-4B38-94ED-42DCED9E2FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26586B18-F1E9-4B38-94ED-42DCED9E2FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDC39F99-872D-4628-A01A-C483A8D6E394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDC39F99-872D-4628-A01A-C483A8D6E394}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDC39F99-872D-4628-A01A-C483A8D6E394}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDC39F99-872D-4628-A01A-C483A8D6E394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A62A0C66-F729-432E-A190-4E60A062F648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A62A0C66-F729-432E-A190-4E60A062F648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A62A0C66-F729-432E-A190-4E60A062F648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A62A0C66-F729-432E-A190-4E60A062F648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4BF12C-D8B4-4484-8412-394C825A25AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4BF12C-D8B4-4484-8412-394C825A25AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4BF12C-D8B4-4484-8412-394C825A25AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4BF12C-D8B4-4484-8412-394C825A25AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E6A75F35-A6B2-4476-8550-679E43E7CB23} = {B7A0E618-313C-4300-868F-3823CB692AEE}
+		{26586B18-F1E9-4B38-94ED-42DCED9E2FBC} = {B7A0E618-313C-4300-868F-3823CB692AEE}
+		{BDC39F99-872D-4628-A01A-C483A8D6E394} = {B7A0E618-313C-4300-868F-3823CB692AEE}
+		{A62A0C66-F729-432E-A190-4E60A062F648} = {B7A0E618-313C-4300-868F-3823CB692AEE}
+		{F58350C4-544C-4D17-A1EA-F4D0DCE80FEA} = {B7A0E618-313C-4300-868F-3823CB692AEE}
+		{BC4BF12C-D8B4-4484-8412-394C825A25AE} = {B7A0E618-313C-4300-868F-3823CB692AEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F15044C-E020-4E6D-9168-CD797F8294B1}

@@ -1,3 +1,6 @@
 [submodule "osu.Shared"]
 	path = osu.Shared
 	url = https://github.com/ilsubyeega/osu.Shared
+[submodule "osu"]
+	path = osu
+	url = https://github.com/ilsubyeega/osu
