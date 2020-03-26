@@ -17,6 +17,7 @@ namespace Sakamoto.Packet.Parser
 				while (r.BaseStream.Position != r.BaseStream.Length)
 				{
 					short type = r.ReadInt16();
+					r.ReadByte();
 					int length = r.ReadInt32();
 					list.Add(new RawPacket(type, length, r.ReadBytes(length)));
 				}
