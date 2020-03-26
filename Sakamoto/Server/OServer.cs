@@ -36,7 +36,7 @@ namespace Sakamoto.Server
         private Events.OOnReceivedRequest OOnReceivedRequest = new Events.OOnReceivedRequest(OServer.server);
         protected override void OnReceivedRequest(HttpRequest request)
         {
-            OOnReceivedRequest.Handle(request, HttpResponse response);
+            OOnReceivedRequest.Handle(request, out HttpResponse response);
             SendResponseAsync(response);
         }
         protected override void OnReceivedRequestError(HttpRequest request, string error)
