@@ -5,7 +5,7 @@ using System.Text;
 namespace Sakamoto.Test
 {
     /* This enum is from https://raw.githubusercontent.com/HoLLy-HaCKeR/HOPEless/master/HOPEless/Bancho/PacketType.cs 
-     Unlicense */
+     MIT */
     public enum PacketType : short
     {
         /// <summary>
