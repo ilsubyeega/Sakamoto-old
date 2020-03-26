@@ -7,8 +7,13 @@ namespace Sakamoto
 		static void Main(string[] args)
 		{
 			Server.CServer.Init();
-			Console.ReadLine();
+			ReadLine();
 			Console.WriteLine("Exited");
+		}
+		static void ReadLine()
+		{
+			Console.ReadLine();
+			ReadLine();
 		}
 	}
 }

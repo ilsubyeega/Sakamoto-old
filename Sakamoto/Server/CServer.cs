@@ -34,8 +34,8 @@ namespace Sakamoto.Server
         private Events.COnReceivedRequest COnReceivedRequest = new Events.COnReceivedRequest(CServer.server);
         protected override void OnReceivedRequest(HttpRequest request)
         {
-            COnReceivedRequest.Handle(request, out HttpResponse response);
-            SendResponseAsync(response);
+            
+            SendResponseAsync(COnReceivedRequest.Handle(request));
         }
         protected override void OnReceivedRequestError(HttpRequest request, string error)
         {

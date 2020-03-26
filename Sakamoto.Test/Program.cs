@@ -6,10 +6,16 @@ namespace Sakamoto.Test
 	class Program
 	{
 		// Add packet array below (Using fiddler Inspectors -> Response -> HexView -> Copy -> Copy as 0x##)
-		static byte[] arrOutput = {  }; 
+		static byte[] arrOutput = {  };
+		static string a = "a";
 		static void Main(string[] args)
 		{
-			Parse();
+			Test(a);
+			Console.WriteLine(a);
+		}
+		static void Test(string b)
+		{
+			b = "owo";
 		}
 		static void Parse()
 		{
