@@ -1,14 +1,12 @@
 ﻿using NetCoreServer;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace Sakamoto.Server
 {
-	class CServer
-	{
+    class CServer
+    {
         public static CHttpServer server;
         private static int port = 40001;
         private static bool Initalized = false;
@@ -18,16 +16,18 @@ namespace Sakamoto.Server
             {
                 server = new CHttpServer(IPAddress.Loopback, port);
                 server.Start();
-            } catch
+            }
+            catch
             {
                 Console.WriteLine("Error while starting SHttpServer!");
-            } finally
+            }
+            finally
             {
                 Initalized = true;
             }
         }
 
-	}
+    }
     class CHttpSession : HttpSession
     {
         public CHttpSession(NetCoreServer.HttpServer server) : base(server) { }

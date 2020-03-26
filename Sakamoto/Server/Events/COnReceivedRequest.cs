@@ -1,11 +1,9 @@
 ﻿using NetCoreServer;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sakamoto.Server.Events
 {
-	class COnReceivedRequest : HttpSession
+    class COnReceivedRequest : HttpSession
     {
 
         public COnReceivedRequest(NetCoreServer.HttpServer server) : base(server) { }

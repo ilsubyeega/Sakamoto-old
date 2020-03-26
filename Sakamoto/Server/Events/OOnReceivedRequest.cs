@@ -1,11 +1,10 @@
 ﻿using NetCoreServer;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Sakamoto.Server.Events
 {
-	class OOnReceivedRequest : HttpSession
+    class OOnReceivedRequest : HttpSession
     {
 
         public OOnReceivedRequest(NetCoreServer.HttpServer server) : base(server) { }
