@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Sakamoto.Controllers
 {
+	[Route("")]
 	public class MainController : Controller
 	{
 		[HttpGet]
