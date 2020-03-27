@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Sakamoto.Packet.Objects
 {
-	class RawPacket
+	public class RawPacket
 	{
 		public RawPacket(short type, int length, byte[] bytearray)
 		{

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Sakamoto.Packet.Parser
 {
-	class RawPacketParser
+	public class RawPacketParser
 	{
 		public static List<RawPacket> Parse(MemoryStream stream)
 		{
