@@ -12,7 +12,7 @@ namespace Sakamoto.Objects
 			this.length = length;
 			this.bytearray = bytearray;
 		}
-
+		 
 		public short type;
 		public int length;
 		public byte[] bytearray;
@@ -22,7 +22,7 @@ namespace Sakamoto.Objects
 			return (PacketType)type;
 		}
 
-		public string toString()
+		public override string ToString()
 		{
 			return "Type: " + (PacketType)type + " Length: " + length;
 		}
