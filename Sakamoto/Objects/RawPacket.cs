@@ -1,5 +1,5 @@
-﻿using Sakamoto.Enums;
-using osu.Shared.Serialization;
+﻿using osu.Shared.Serialization;
+using Sakamoto.Enums;
 using System.IO;
 
 namespace Sakamoto.Objects
@@ -12,7 +12,7 @@ namespace Sakamoto.Objects
 			this.length = length;
 			this.bytearray = bytearray;
 		}
-		 
+
 		public short type;
 		public int length;
 		public byte[] bytearray;
@@ -29,7 +29,8 @@ namespace Sakamoto.Objects
 
 		public byte[] toByteArray()
 		{
-			try { 
+			try
+			{
 				MemoryStream ms = new MemoryStream();
 				SerializationWriter writer = new SerializationWriter(ms);
 				writer.Write(type);
@@ -37,7 +38,8 @@ namespace Sakamoto.Objects
 				writer.Write(length);
 				writer.Write(bytearray);
 				return ms.ToArray();
-			} catch
+			}
+			catch
 			{
 				return null;
 			}
