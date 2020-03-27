@@ -20,7 +20,7 @@ namespace Sakamoto.Controllers
 			"c.osu.leu.kr", "ce.osu.leu.kr", "c1.osu.leu.kr", "c2.osu.leu.kr", "c3.osu.leu.kr", "c4.osu.leu.kr", "c5.osu.leu.kr", "c6.osu.leu.kr", "c7.osu.leu.kr", "c8.osu.leu.kr", "c9.osu.leu.kr")]
 		public async Task<IActionResult> Post()
 		{
-			if (Request.Headers["User-Agent"].ToString() == "osu!" || Request.Body.Length != 0)
+			if (Request.Headers["User-Agent"].ToString() == "osu!")
 			{
 				MemoryStream st = new MemoryStream();
 				await Request.Body.CopyToAsync(st);
