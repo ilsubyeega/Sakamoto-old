@@ -1,8 +1,8 @@
 ﻿using osu.Shared.Serialization;
-using Sakamoto.Enums;
+using Sakamoto.Packet.Enums;
 using System.IO;
 
-namespace Sakamoto.Objects
+namespace Sakamoto.Packet.Objects
 {
 	class RawPacket
 	{

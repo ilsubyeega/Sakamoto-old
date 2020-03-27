@@ -1,5 +1,5 @@
 ﻿using osu.Shared.Serialization;
-using Sakamoto.Objects;
+using Sakamoto.Packet.Objects;
 using System.Collections.Generic;
 using System.IO;
 

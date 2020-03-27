@@ -1,4 +1,4 @@
-﻿namespace Sakamoto.Enums
+﻿namespace Sakamoto.Packet.Enums
 {
 	/* This enum is from https://raw.githubusercontent.com/HoLLy-HaCKeR/HOPEless/master/HOPEless/Bancho/PacketType.cs 
      MIT */

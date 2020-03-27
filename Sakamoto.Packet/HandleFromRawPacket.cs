@@ -1,7 +1,7 @@
 ﻿using osu.Shared.Serialization;
-using Sakamoto.Objects;
+using Sakamoto.Packet.Objects;
 using System;
-namespace Sakamoto.Packet.Parser
+namespace Sakamoto.Packet
 {
 	class HandleFromRawPacket
 	{
