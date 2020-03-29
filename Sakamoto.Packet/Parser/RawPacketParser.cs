@@ -1,18 +1,17 @@
 ﻿using osu.Shared.Serialization;
-using Sakamoto.Objects;
+using Sakamoto.Packet.Objects;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Sakamoto.Packet.Parser
 {
-	class RawByteParser
+	public class RawPacketParser
 	{
-		public static List<RawPacket> Parse(byte[] bytearray)
+		public static List<RawPacket> Parse(MemoryStream stream)
 		{
 			List<RawPacket> list = new List<RawPacket>();
 			try
 			{
-				var stream = new MemoryStream(bytearray);
 				SerializationReader r = new SerializationReader(stream);
 				while (r.BaseStream.Position != r.BaseStream.Length)
 				{
@@ -26,6 +25,26 @@ namespace Sakamoto.Packet.Parser
 			catch
 			{
 				return null;
+			}
+		}
+		public static bool isValid(MemoryStream stream)
+		{
+			try
+			{
+				SerializationReader r = new SerializationReader(stream);
+				while (r.BaseStream.Position != r.BaseStream.Length)
+				{
+					r.ReadInt16();
+					if (r.ReadByte() != 0x00)
+						return false;
+					int length = r.ReadInt32();
+					r.ReadBytes(length);
+				}
+				return true;
+			}
+			catch
+			{
+				return false;
 			}
 		}
 	}

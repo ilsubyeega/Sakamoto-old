@@ -1,19 +1,25 @@
-﻿using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Net;
 
 namespace Sakamoto
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-			Server.CServer.Init();
-			ReadLine();
-			Console.WriteLine("Exited");
-		}
-		static void ReadLine()
-		{
-			Console.ReadLine();
-			ReadLine();
+
+			Host.CreateDefaultBuilder(args)
+				.ConfigureWebHostDefaults(builder =>
+				{
+					builder.UseKestrel(config =>
+					{
+						config.Limits.MaxRequestBodySize = null;
+						config.Listen(IPAddress.Loopback, 20002);
+					});
+					builder.UseStartup<Startup>();
+				})
+				.StartAsync();
 		}
 	}
 }

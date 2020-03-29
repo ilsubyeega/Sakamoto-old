@@ -1,10 +1,10 @@
-﻿using Sakamoto.Enums;
-using osu.Shared.Serialization;
+﻿using osu.Shared.Serialization;
+using Sakamoto.Packet.Enums;
 using System.IO;
 
-namespace Sakamoto.Objects
+namespace Sakamoto.Packet.Objects
 {
-	class RawPacket
+	public class RawPacket
 	{
 		public RawPacket(short type, int length, byte[] bytearray)
 		{
@@ -22,14 +22,15 @@ namespace Sakamoto.Objects
 			return (PacketType)type;
 		}
 
-		public string toString()
+		public override string ToString()
 		{
 			return "Type: " + (PacketType)type + " Length: " + length;
 		}
 
 		public byte[] toByteArray()
 		{
-			try { 
+			try
+			{
 				MemoryStream ms = new MemoryStream();
 				SerializationWriter writer = new SerializationWriter(ms);
 				writer.Write(type);
@@ -37,7 +38,8 @@ namespace Sakamoto.Objects
 				writer.Write(length);
 				writer.Write(bytearray);
 				return ms.ToArray();
-			} catch
+			}
+			catch
 			{
 				return null;
 			}
