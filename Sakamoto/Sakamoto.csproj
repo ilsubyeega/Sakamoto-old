@@ -6,9 +6,11 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Version>0.1</Version>
     <PackageLicenseExpression>MIT License</PackageLicenseExpression>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HOPEless\HOPEless\HOPEless.csproj" />
     <ProjectReference Include="..\osu.Shared\osu.Shared\osu.Shared.csproj" />
     <ProjectReference Include="..\osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj" />
     <ProjectReference Include="..\osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
@@ -26,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Enums\" />
+    <Folder Include="Events\Packet\" />
     <Folder Include="Objects\" />
   </ItemGroup>
 

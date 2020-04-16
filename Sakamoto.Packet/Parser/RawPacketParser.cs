@@ -1,4 +1,5 @@
 ﻿using osu.Shared.Serialization;
+using Sakamoto.Packet.Enums;
 using Sakamoto.Packet.Objects;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ namespace Sakamoto.Packet.Parser
 					short type = r.ReadInt16();
 					r.ReadByte();
 					int length = r.ReadInt32();
-					list.Add(new RawPacket(type, length, r.ReadBytes(length)));
+					list.Add(new RawPacket((PacketType)type, length, r.ReadBytes(length)));
 				}
 				return list;
 			}

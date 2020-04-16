@@ -4,3 +4,6 @@
 [submodule "osu"]
 	path = osu
 	url = https://github.com/ilsubyeega/osu
+[submodule "HOPEless"]
+	path = HOPEless
+	url = https://github.com/ilsubyeega/HOPEless
