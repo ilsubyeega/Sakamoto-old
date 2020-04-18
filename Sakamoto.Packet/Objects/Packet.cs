@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using osu.Shared.Serialization;
+﻿using osu.Shared.Serialization;
 using Sakamoto.Packet.Enums;
 
 namespace Sakamoto.Packet.Objects
@@ -22,7 +19,7 @@ namespace Sakamoto.Packet.Objects
 			this.length = rawpacket.length;
 			this.bytearray = rawpacket.bytearray;
 		}
-		
+
 		public void WriteRawToStream(SerializationWriter writer)
 		{
 			writer.Write((short)type);

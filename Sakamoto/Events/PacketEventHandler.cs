@@ -1,9 +1,6 @@
 ﻿using HOPEless.Bancho;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Sakamoto.Events.Packet;
+using System;
 namespace Sakamoto.Events
 {
 	public static class PacketEventHandler
@@ -19,7 +16,7 @@ namespace Sakamoto.Events
 					ClientUserStatus.Handle(packet);
 					break;
 			}
-				
+
 		}
 	}
 }

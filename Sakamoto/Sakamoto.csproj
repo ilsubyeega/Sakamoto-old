@@ -26,11 +26,5 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Enums\" />
-    <Folder Include="Events\Packet\" />
-    <Folder Include="Objects\" />
-  </ItemGroup>
-
 
 </Project>

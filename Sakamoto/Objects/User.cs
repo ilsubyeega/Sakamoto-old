@@ -1,9 +1,7 @@
-﻿using HOPEless.Bancho.Objects;
+﻿using HOPEless.Bancho;
+using HOPEless.Bancho.Objects;
 using Sakamoto.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Objects
 {
@@ -16,7 +14,7 @@ namespace Sakamoto.Objects
 		public string email;
 		public string password_md5;
 		public string notes;
-		
+
 		public bool silenced;
 		public int silence_end;
 		public string silence_reason;
@@ -31,8 +29,18 @@ namespace Sakamoto.Objects
 		public string[] joinedchannel;
 		public bool block_nonfriend;
 
+		List<BanchoPacket> queue = new List<BanchoPacket>();
+
+		public void addQueue(BanchoPacket input)
+		{
+			queue.Add(input);
+		}
+		public void ClearQueue()
+		{
+			queue.Clear();
+		}
 	}
-	
+
 	public class UserGame
 	{
 		public int pp_osu;

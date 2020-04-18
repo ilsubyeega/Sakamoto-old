@@ -1,5 +1,4 @@
-﻿using osu.Shared.Serialization;
-using System;
+﻿using System;
 using System.IO;
 
 namespace Sakamoto.Packet.Objects.Args
@@ -21,10 +20,13 @@ namespace Sakamoto.Packet.Objects.Args
 			this.username = reader.ReadLine();
 			this.password_md5 = reader.ReadLine();
 			string data = reader.ReadLine();
-			if (String.IsNullOrEmpty(data)) { 
+			if (String.IsNullOrEmpty(data))
+			{
 				this.isValid = false;
 				Console.WriteLine(username + password_md5 + "data is empty");
-			} else { 
+			}
+			else
+			{
 				string[] _tmp = data.Split("|");
 				if (_tmp.Length == 5 || _tmp == null)
 				{
@@ -34,7 +36,8 @@ namespace Sakamoto.Packet.Objects.Args
 					this.hash = _tmp[3];
 					this.block_non_friend_dms = (_tmp[4] == "1");
 					this.CheckValid();
-				} else
+				}
+				else
 				{
 					this.isValid = false;
 				}
@@ -55,7 +58,7 @@ namespace Sakamoto.Packet.Objects.Args
 
 		private void CheckValid()
 		{
-			if (isValid==true)
+			if (isValid == true)
 				isValid = !(String.IsNullOrEmpty(username) &&
 					String.IsNullOrEmpty(password_md5) &&
 					String.IsNullOrEmpty(version) &&

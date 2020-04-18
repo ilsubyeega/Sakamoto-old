@@ -1,13 +1,7 @@
 ﻿using HOPEless.Bancho;
-using HOPEless.Bancho.Objects;
-using HOPEless.osu;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using osu.Shared;
 using osu.Shared.Serialization;
-using Sakamoto.Packet.Objects;
-using Sakamoto.Packet.Objects.Args;
-using Sakamoto.Packet.Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,72 +19,26 @@ namespace Sakamoto.Controllers
 		public async Task<IActionResult> Post()
 		{
 			Response.Headers["cho-server"] = "Sakamoto (https://github.com/ilsubyeega/Sakamoto)";
+			Response.Headers["cho-protocol"] = "19";
 			if (Request.Headers["User-Agent"].ToString() == "osu!")
 			{
 				MemoryStream ms = new MemoryStream();
 				SerializationWriter writer = new SerializationWriter(ms);
 				if (String.IsNullOrEmpty(Request.Headers["osu-token"]))
 				{
+					// if client requests without tokens, it means client probably going to login.
 					MemoryStream st = new MemoryStream();
 					await Request.Body.CopyToAsync(st);
-					st.Position = 0;
-
-					PendingLoginArg loginarg = new PendingLoginArg(new StreamReader(st));
-					if (loginarg.isValid)
-					{
-						new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(1)).WriteToStream(writer);
-						new BanchoPacket(PacketType.ServerUserPresence, new BanchoUserPresence()
-						{
-							UserId = 1,
-							UsesOsuClient = true,
-							Timezone = 9,
-							CountryCode = 0,
-							Permissions = PlayerRank.Supporter,
-							Longitude = 1.2f,
-							Latitude = 1.2f,
-							Rank = 1
-						}).WriteToStream(writer);
-						new BanchoPacket(PacketType.ServerUserData, new BanchoUserData()
-						{
-							UserId = 1,
-							Status = new BanchoUserStatus()
-							{
-								Action = BanchoAction.Idle,
-								ActionText = "몰라",
-								BeatmapChecksum = "aaaaaaaaaaa",
-								CurrentMods = Mods.Easy,
-								PlayMode = GameMode.Standard,
-								BeatmapId = 1
-							},
-							RankedScore = 100,
-							Accuracy = 100,
-							Playcount = 0,
-							TotalScore = 1000,
-							Rank = 1,
-							Performance = 10000
-						}).WriteToStream(writer);
-						new BanchoPacket(PacketType.ServerNotification, new BanchoString("ㅎㅇ")).WriteToStream(writer);
-
-						ms.Position = 0;
-						Response.Headers["cho-protocol"] = "19";
-						Response.Headers["cho-token"] = "3521b0b8-4d7a-418e-aaf7-d853c4e7fake";
-						List<RawPacket> parse = RawPacketParser.Parse(ms);
-						for (int a = 0; a < parse.Count; a++)
-						{
-							Console.WriteLine(parse[a].ToString());
-						}
-						ms.Position = 0;
-						return base.File(ms, "application/octet-stream");
-					}
-					else
-					{
-						Console.WriteLine("invalid Login");
-					}
+					Events.PendingLogin.Handle(st, writer, out string token);
+					if (token != null)
+						Response.Headers["cho-token"] = token;
+					ms.Position = 0;
 				}
 				else
 				{
 					try
 					{
+						// Read for debuging
 						MemoryStream st = new MemoryStream();
 						await Request.Body.CopyToAsync(st);
 						st.Position = 0;
@@ -99,14 +47,29 @@ namespace Sakamoto.Controllers
 						{
 							Console.WriteLine(list[a].ToString());
 						}
+
+						/*
+						new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
+						{
+							Channel = "#general",
+							Message = "Poggers",
+							Sender = "Sakamoto",
+							SenderId = 2
+						}).WriteToStream(writer);*/
+
+						// todo handle
 					}
 					catch
 					{
+
 						Console.WriteLine("The packet is invalid");
 					}
 				}
+				ms.Position = 0;
+				return base.File(ms, "application/octet-stream");
 			}
-			return StatusCode(200, "Sakamoto (Bannedcho)\nosu!bancho reversing project"); //todo handle
+			return StatusCode(200, "Sakamoto (Bannedcho)\nosu!bancho reversing project");
 		}
+
 	}
 }

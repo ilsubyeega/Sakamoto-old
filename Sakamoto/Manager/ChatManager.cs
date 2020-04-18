@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Manager
 {
@@ -11,15 +9,22 @@ namespace Sakamoto.Manager
 		public static bool Initalized = false;
 		public static void Init()
 		{
+			if (Initalized) return;
 			channels.Add(new Channel()
 			{
-				name = "general",
+				name = "#general",
 				description = "General Chat",
 				autojoin = true
 			});
 			channels.Add(new Channel()
 			{
-				name = "dev",
+				name = "#osu",
+				description = "Welcome to osu!",
+				autojoin = true
+			});
+			channels.Add(new Channel()
+			{
+				name = "#dev",
 				description = "Developer's Chat",
 				autojoin = true
 			});
@@ -53,6 +58,10 @@ namespace Sakamoto.Manager
 		{
 			return channels.Where(a => a.name == "name").FirstOrDefault();
 		}
+		public static Channel[] GetAutoJoinChannel(bool isauto)
+		{
+			return channels.Where(a => a.autojoin == isauto).ToArray();
+		}
 
 		public static void SendMessage(string name, int userid)
 		{
@@ -60,7 +69,13 @@ namespace Sakamoto.Manager
 			if (channel == null) return;
 			if (!JoinedChannel(name, userid)) return;
 			// Todo queue every joined member
-
+		}
+		public static void SendMessageSecret(string name, int userid)
+		{
+			Channel channel = GetChannel(name);
+			if (channel == null) return;
+			if (!JoinedChannel(name, userid)) return;
+			// Todo queue every joined member
 		}
 	}
 
@@ -69,6 +84,10 @@ namespace Sakamoto.Manager
 		public string name;
 		public string description;
 		public bool autojoin = false;
+		public short GetUserCount()
+		{
+			return (short)playerlist.Count();
+		}
 		public List<int> playerlist = new List<int>();
 	}
 }
