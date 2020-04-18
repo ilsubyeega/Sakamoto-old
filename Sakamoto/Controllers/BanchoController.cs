@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using osu.Shared.Serialization;
+using Sakamoto.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,6 +47,7 @@ namespace Sakamoto.Controllers
 						for (int a = 0; a < list.Count; a++)
 						{
 							Console.WriteLine(list[a].ToString());
+							PacketEventHandler.Handle(list[a], writer);
 						}
 
 						/*
@@ -57,11 +59,10 @@ namespace Sakamoto.Controllers
 							SenderId = 2
 						}).WriteToStream(writer);*/
 
-						// todo handle
+
 					}
 					catch
 					{
-
 						Console.WriteLine("The packet is invalid");
 					}
 				}

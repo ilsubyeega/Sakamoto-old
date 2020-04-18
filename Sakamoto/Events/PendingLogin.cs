@@ -68,6 +68,7 @@ namespace Sakamoto.Events
 					Sender = "Sakamoto",
 					SenderId = 2
 				}).WriteToStream(writer);
+				new BanchoPacket(PacketType.ServerUserNameChanged, new BanchoString("a>>>>ilsubyeega")).WriteToStream(writer);
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(false))
 					new BanchoPacket(PacketType.ServerChatChannelAvailable,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
