@@ -10,7 +10,7 @@ namespace Sakamoto.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Get()
 		{
-			return Ok("Sakamoto (Bancho)\nosu!bancho reversing project");
+			return Ok("Sakamoto (Bancho) \nosu!bancho reversing project");
 		}
 	}
 }

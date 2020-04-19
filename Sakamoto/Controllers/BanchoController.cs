@@ -1,8 +1,11 @@
 ﻿using HOPEless.Bancho;
+using HOPEless.Bancho.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using osu.Shared.Serialization;
+using Sakamoto.Cache;
 using Sakamoto.Events;
+using Sakamoto.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,21 +37,33 @@ namespace Sakamoto.Controllers
 					if (token != null)
 						Response.Headers["cho-token"] = token;
 					ms.Position = 0;
+					//PacketParser.Debug(ms);
+					ms.Position = 0;
 				}
 				else
 				{
 					try
 					{
-						// Read for debuging
-						MemoryStream st = new MemoryStream();
-						await Request.Body.CopyToAsync(st);
-						st.Position = 0;
-						List<BanchoPacket> list = PacketParser.Parse(st);
-						for (int a = 0; a < list.Count; a++)
+						User u = UserCache.GetUserByToken(Request.Headers["osu-token"]);
+						if (u != null)
 						{
-							Console.WriteLine(list[a].ToString());
-							PacketEventHandler.Handle(list[a], writer);
+							// Read for debuging
+							MemoryStream st = new MemoryStream();
+							await Request.Body.CopyToAsync(st);
+							st.Position = 0;
+
+							List<BanchoPacket> list = PacketParser.Parse(st);
+							foreach (BanchoPacket packet in list)
+							{
+								PacketEventHandler.Handle(packet, u);
+							}
 						}
+						else
+						{
+							// We cannot find the tokens in memory, so just reconnect it.
+							new BanchoPacket(PacketType.ServerRestart, new BanchoInt(0)).WriteToStream(writer);
+						}
+
 
 						/*
 						new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
@@ -66,6 +81,8 @@ namespace Sakamoto.Controllers
 						Console.WriteLine("The packet is invalid");
 					}
 				}
+				ms.Position = 0;
+				//PacketParser.Debug(ms);
 				ms.Position = 0;
 				return base.File(ms, "application/octet-stream");
 			}

@@ -1,10 +1,12 @@
 ﻿using HOPEless.Bancho;
 using HOPEless.Bancho.Objects;
-using HOPEless.osu;
-using osu.Shared;
 using osu.Shared.Serialization;
+using Sakamoto.Cache;
 using Sakamoto.Manager;
+using Sakamoto.Objects;
 using Sakamoto.Packet.Objects.Args;
+using Sakamoto.Util;
+using System;
 using System.IO;
 
 namespace Sakamoto.Events
@@ -19,61 +21,49 @@ namespace Sakamoto.Events
 			PendingLoginArg loginarg = new PendingLoginArg(new StreamReader(st));
 			if (loginarg.isValid)
 			{
-				token = "3521b0b8-4d7a-418e-aaf7-d853c4e7fake";
-				new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)).WriteToStream(writer);
-				new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(1)).WriteToStream(writer);
-				new BanchoPacket(PacketType.ServerUserPresence, new BanchoUserPresence()
-				{
-					UserId = 1,
-					UsesOsuClient = true,
-					Timezone = 9,
-					CountryCode = 0,
-					Permissions = PlayerRank.Supporter,
-					Longitude = 1.2f,
-					Latitude = 1.2f,
-					Rank = 1
-				}).WriteToStream(writer);
-				new BanchoPacket(PacketType.ServerUserData, new BanchoUserData()
-				{
-					UserId = 1,
-					Status = new BanchoUserStatus()
-					{
-						Action = BanchoAction.Idle,
-						ActionText = "몰라",
-						BeatmapChecksum = "aaaaaaaaaaa",
-						CurrentMods = Mods.Easy,
-						PlayMode = GameMode.Standard,
-						BeatmapId = 1
-					},
-					RankedScore = 100,
-					Accuracy = 100,
-					Playcount = 0,
-					TotalScore = 1000,
-					Rank = 1,
-					Performance = 10000
-				}).WriteToStream(writer);
-				new BanchoPacket(PacketType.ServerNotification, new BanchoString("Welcome to Sakamoto")).WriteToStream(writer);
+				token = TokenGenerator.Generate();
+				int userid = 1; // test
+
+				Console.WriteLine(loginarg.username + " joined with id " + userid);
+
+				User user = new User();
+				user.userid = userid;
+				user.username = loginarg.username;
+				user.username_safe = loginarg.username.ToLower();
+				user.chotoken = token;
+				user.pp = new UserGame(10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000);
+				user.block_nonfriend = loginarg.block_non_friend_dms;
+				user.timezone = loginarg.timezone;
+				user.countryid = 0;
+				UserCache.Add(user);
+
+				user.addQueue(new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)));
+				user.addQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString("Welcome to Sakamoto")));
+
+				user.addQueue(new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(user.userid)));
+				user.addQueue(new BanchoPacket(PacketType.ServerUserPresence, user.ToPresence()));
+				user.addQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
+
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(true))
 				{
-					new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
+					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
-						).WriteToStream(writer);
-					new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(channel.name)).WriteToStream(writer);
-
+						));
+					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(channel.name)));
 				}
-				new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
+				user.addQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
 				{
 					Channel = "#general",
-					Message = "Poggers",
+					Message = "Welcome to Sakamoto!",
 					Sender = "Sakamoto",
 					SenderId = 2
-				}).WriteToStream(writer);
-				new BanchoPacket(PacketType.ServerUserNameChanged, new BanchoString("a>>>>ilsubyeega")).WriteToStream(writer);
+				}));
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(false))
-					new BanchoPacket(PacketType.ServerChatChannelAvailable,
+					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailable,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
-						).WriteToStream(writer);
-
+						));
+				PacketUtil.WriteToStream(user.queue, writer);
+				user.ClearQueue();
 
 			}
 		}

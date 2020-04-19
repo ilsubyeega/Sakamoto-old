@@ -1,6 +1,8 @@
 ﻿using HOPEless.Bancho;
 using HOPEless.Bancho.Objects;
+using osu.Shared;
 using Sakamoto.Enums;
+using Sakamoto.Manager;
 using System.Collections.Generic;
 
 namespace Sakamoto.Objects
@@ -15,23 +17,37 @@ namespace Sakamoto.Objects
 		public string password_md5;
 		public string notes;
 
-		public bool silenced;
+		public int timezone = 0;
+		public byte countryid = 0;
+
+		public bool silenced = false;
 		public int silence_end;
 		public string silence_reason;
 
+		public PlayerType type = PlayerType.Player;
 		public int privileges;
 		public bool is_donor;
 		public int donor_expire;
 
 		public bool is_restricted;
+		public GameType gametype = GameType.Osu;
 
 		public BanchoUserStatus status = new BanchoUserStatus();
 		public UserGame pp = new UserGame();
 
-		public string[] joinedchannel;
+		public Channel[] JoinedChannel()
+		{
+			return ChatManager.GetListJoinedChannel(userid);
+		}
+
+		public List<int> friends = new List<int>();
 		public bool block_nonfriend;
 
-		List<BanchoPacket> queue = new List<BanchoPacket>();
+		public List<BanchoPacket> queue = new List<BanchoPacket>();
+
+		public string chotoken;
+
+		public long lasttimestamp = 0;
 
 		public void addQueue(BanchoPacket input)
 		{
@@ -41,6 +57,37 @@ namespace Sakamoto.Objects
 		{
 			queue.Clear();
 		}
+
+		public BanchoUserPresence ToPresence()
+		{
+			return new BanchoUserPresence()
+			{
+				UserId = this.userid,
+				UsesOsuClient = true,
+				Username = this.username,
+				Timezone = this.timezone,
+				CountryCode = countryid,
+				Longitude = 1.2f,
+				Latitude = 1.2f,
+				Permissions = PlayerRank.Supporter,
+				Rank = 1,
+				PlayMode = GameTypeUtil.getShared(gametype)
+			};
+		}
+		public BanchoUserData ToUserData()
+		{
+			return new BanchoUserData()
+			{
+				UserId = this.userid,
+				Status = status,
+				RankedScore = 1000,
+				Accuracy = 100f,
+				Playcount = pp.GetPlayCountByGame((GameType)status.PlayMode),
+				TotalScore = 1000,
+				Rank = 1,
+				Performance = pp.GetPerformanceByGame((GameType)status.PlayMode)
+			};
+		}
 	}
 
 	public class UserGame
@@ -49,9 +96,9 @@ namespace Sakamoto.Objects
 		{
 
 		}
-		public UserGame(int pp_osu, int pp_osutaiko, int pp_osucatch, int pp_osumania, 
-			int pp_osu_relax, int pp_osutaiko_relax, int pp_osucatch_relax, 
-			int playcount_osu, int playcount_osutaiko, int playcount_osucatch, int playcount_osumania, 
+		public UserGame(short pp_osu, short pp_osutaiko, short pp_osucatch, short pp_osumania,
+			short pp_osu_relax, short pp_osutaiko_relax, short pp_osucatch_relax,
+			int playcount_osu, int playcount_osutaiko, int playcount_osucatch, int playcount_osumania,
 			int playcount_osu_relax, int playcount_osutaiko_relax, int playcount_osucatch_relax)
 		{
 			this.pp_osu = pp_osu;
@@ -71,13 +118,13 @@ namespace Sakamoto.Objects
 		}
 
 
-		public int pp_osu;
-		public int pp_osutaiko;
-		public int pp_osucatch;
-		public int pp_osumania;
-		public int pp_osu_relax;
-		public int pp_osutaiko_relax;
-		public int pp_osucatch_relax;
+		public short pp_osu;
+		public short pp_osutaiko;
+		public short pp_osucatch;
+		public short pp_osumania;
+		public short pp_osu_relax;
+		public short pp_osutaiko_relax;
+		public short pp_osucatch_relax;
 
 		public int playcount_osu;
 		public int playcount_osutaiko;
@@ -87,7 +134,7 @@ namespace Sakamoto.Objects
 		public int playcount_osutaiko_relax;
 		public int playcount_osucatch_relax;
 
-		public int GetPerformanceByGame(GameType type)
+		public short GetPerformanceByGame(GameType type)
 		{
 			switch (type)
 			{

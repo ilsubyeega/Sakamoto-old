@@ -33,10 +33,12 @@ namespace Sakamoto.Manager
 		public static void joinChannel(string name, int userid)
 		{
 			if (JoinedChannel(name, userid)) return;
+			if (!HasChannel(name)) return;
 			channels
 				.Where(instance => instance.name == name)
 				.ToList()
 				.ForEach(instance => instance.playerlist.Add(userid));
+
 		}
 		public static void LeaveChannel(string name, int userid)
 		{
@@ -61,6 +63,10 @@ namespace Sakamoto.Manager
 		public static Channel[] GetAutoJoinChannel(bool isauto)
 		{
 			return channels.Where(a => a.autojoin == isauto).ToArray();
+		}
+		public static Channel[] GetListJoinedChannel(int userid)
+		{
+			return channels.Where(a => a.playerlist.Contains(userid)).ToArray();
 		}
 
 		public static void SendMessage(string name, int userid)

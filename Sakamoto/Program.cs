@@ -8,7 +8,8 @@ namespace Sakamoto
 	{
 		public static void Main(string[] args)
 		{
-			Manager.ChatManager.Init();
+			Initalize.Init();
+
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(builder =>
 				{
