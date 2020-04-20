@@ -1,9 +1,5 @@
 ﻿using HOPEless.Bancho;
 using Sakamoto.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Events.Packet
 {
@@ -11,7 +7,7 @@ namespace Sakamoto.Events.Packet
 	{
 		public static void Handle(BanchoPacket packet, User user)
 		{
-			user.addQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
+			user.AddQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
 		}
 	}
 }

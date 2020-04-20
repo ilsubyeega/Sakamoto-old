@@ -29,32 +29,34 @@ namespace Sakamoto.Events
 
 				Console.WriteLine(loginarg.username + " joined with id " + userid);
 
-				User user = new User();
-				user.userid = userid;
-				user.username = loginarg.username;
-				user.username_safe = loginarg.username.ToLower();
-				user.chotoken = token;
-				user.pp = new UserGame();
-				user.block_nonfriend = loginarg.block_non_friend_dms;
-				user.timezone = loginarg.timezone;
-				user.countryid = 0;
+				User user = new User
+				{
+					userid = userid,
+					username = loginarg.username,
+					username_safe = loginarg.username.ToLower(),
+					chotoken = token,
+					pp = new UserGame(),
+					block_nonfriend = loginarg.block_non_friend_dms,
+					timezone = loginarg.timezone,
+					countryid = 0
+				};
 				UserCache.Add(user);
 
-				user.addQueue(new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)));
-				user.addQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString($"Welcome to Sakamoto\nBuild Date: {Common.build_date.ToString("yyyy-MM-dd HH:mm")}")));
+				user.AddQueue(new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)));
+				user.AddQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString($"Welcome to Sakamoto\nBuild Date: {Common.build_date:yyyy-MM-dd HH:mm}")));
 
-				user.addQueue(new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(user.userid)));
-				user.addQueue(new BanchoPacket(PacketType.ServerUserPresence, user.ToPresence()));
-				user.addQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
-				
+				user.AddQueue(new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(user.userid)));
+				user.AddQueue(new BanchoPacket(PacketType.ServerUserPresence, user.ToPresence()));
+				user.AddQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
+
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(true))
 				{
-					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
+					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
 						));
-					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(channel.name)));
+					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(channel.name)));
 				}
-				user.addQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
+				user.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
 				{
 					Channel = "#general",
 					Message = "Welcome to Sakamoto!",
@@ -62,10 +64,10 @@ namespace Sakamoto.Events
 					SenderId = 2
 				}));
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(false))
-					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailable,
+					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelAvailable,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
 						));
-				UserUtil.sendAllUser(user);
+				UserUtil.SendAllUser(user);
 				PacketUtil.WriteToStream(user.queue, writer);
 				user.ClearQueue();
 

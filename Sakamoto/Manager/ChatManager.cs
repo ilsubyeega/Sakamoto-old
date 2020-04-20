@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using HOPEless.Bancho;
+using HOPEless.Bancho.Objects;
+using Sakamoto.Cache;
+using Sakamoto.Objects;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Sakamoto.Manager
@@ -12,14 +16,14 @@ namespace Sakamoto.Manager
 			if (Initalized) return;
 			channels.Add(new Channel()
 			{
-				name = "#general",
-				description = "General Chat",
+				name = "#osu",
+				description = "Welcome to osu!",
 				autojoin = true
 			});
 			channels.Add(new Channel()
 			{
-				name = "#osu",
-				description = "Welcome to osu!",
+				name = "#korean",
+				description = "Korean only chat.",
 				autojoin = true
 			});
 			channels.Add(new Channel()
@@ -30,23 +34,28 @@ namespace Sakamoto.Manager
 			});
 			Initalized = true;
 		}
-		public static void joinChannel(string name, int userid)
+		public static void JoinChannel(string name, int userid)
 		{
+			User u = UserCache.GetUserById(userid);
+			if (u == null) return;
 			if (JoinedChannel(name, userid)) return;
 			if (!HasChannel(name)) return;
 			channels
 				.Where(instance => instance.name == name)
 				.ToList()
 				.ForEach(instance => instance.playerlist.Add(userid));
-
+			u.AddQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(name)));
 		}
 		public static void LeaveChannel(string name, int userid)
 		{
+			User u = UserCache.GetUserById(userid);
+			if (u == null) return;
 			if (!JoinedChannel(name, userid)) return;
 			channels
 				.Where(instance => instance.name == name)
 				.ToList()
 				.ForEach(instance => instance.playerlist.Remove(userid));
+			u.AddQueue(new BanchoPacket(PacketType.ServerChatChannelRevoked, new BanchoString(name)));
 		}
 		public static bool JoinedChannel(string name, int userid)
 		{

@@ -10,10 +10,10 @@ namespace Sakamoto.Events.Packet
 		public static void Handle(BanchoPacket packet, User user)
 		{
 			BanchoUserStatus status = new BanchoUserStatus(packet.Data);
-			
+
 			user.status = status;
 			Console.WriteLine($"{user.status.PlayMode}");
-			user.addQueue(new BanchoPacket(PacketType.ServerUserData, user.status));
+			user.AddQueue(new BanchoPacket(PacketType.ServerUserData, user.status));
 		}
 	}
 }

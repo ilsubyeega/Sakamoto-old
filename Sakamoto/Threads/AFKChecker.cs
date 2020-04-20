@@ -43,14 +43,14 @@ namespace Sakamoto.Threads
 					if (u.lasttimestamp + (1000 * 400) > current)
 					{
 						Console.WriteLine($"AFK Checker: User {u.username} ({u.userid}) is disconnected");
-						Console.WriteLine($"AFK Checker: Time Difference {(current- u.lasttimestamp)/1000}s");
+						Console.WriteLine($"AFK Checker: Time Difference {(current - u.lasttimestamp) / 1000}s");
 						toremove.Add(u);
 					}
 				}
 			}
 			foreach (User u in toremove)
 				UserCache.userlist.Remove(u);
-			
+
 		}
 	}
 }

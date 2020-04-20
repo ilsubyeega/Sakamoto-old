@@ -41,7 +41,7 @@ namespace Sakamoto.Objects
 		{
 			return ChatManager.GetListJoinedChannel(userid);
 		}
-		public void JoinChannel(string name) => ChatManager.joinChannel(name, userid);
+		public void JoinChannel(string name) => ChatManager.JoinChannel(name, userid);
 		public void LeaveChannel(string name) => ChatManager.LeaveChannel(name, userid);
 
 		public List<int> friends = new List<int>();
@@ -53,7 +53,7 @@ namespace Sakamoto.Objects
 
 		public long lasttimestamp = 0;
 
-		public void addQueue(BanchoPacket input)
+		public void AddQueue(BanchoPacket input)
 		{
 			queue.Add(input);
 		}
@@ -138,8 +138,8 @@ namespace Sakamoto.Objects
 			total_score = totalscore_arg;
 		}
 
-		
-		
+
+
 		/// <summary>
 		/// Get pp by GameType
 		/// </summary>

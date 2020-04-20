@@ -86,8 +86,8 @@ namespace Sakamoto.Controllers
 					}
 					catch (Exception e)
 					{
-						
-						Console.WriteLine("The packet is invalid\n"+ e.StackTrace);
+
+						Console.WriteLine("The packet is invalid\n" + e.StackTrace);
 					}
 				}
 				ms.Position = 0;

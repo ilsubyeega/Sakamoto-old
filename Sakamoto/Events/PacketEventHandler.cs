@@ -1,5 +1,4 @@
 ﻿using HOPEless.Bancho;
-using Sakamoto.Events.Packet;
 using Sakamoto.Objects;
 using System;
 namespace Sakamoto.Events
@@ -11,7 +10,7 @@ namespace Sakamoto.Events
 			if (packet.Type != PacketType.ClientUserStatsRequest && packet.Type != PacketType.ClientPong)
 				Console.WriteLine($"{packet.Type}");
 			Type class_type = Type.GetType($"Sakamoto.Events.Packet.{packet.Type}");
-			if (class_type==null || class_type.GetMethod("Handle") == null)
+			if (class_type == null || class_type.GetMethod("Handle") == null)
 			{
 				Console.WriteLine($"Not Handled this Packet: {packet.Type}");
 				return;
