@@ -22,7 +22,7 @@ namespace Sakamoto
 			bot.type = Enums.PlayerType.Bot;
 			bot.status.Action = HOPEless.osu.BanchoAction.Idle;
 			bot.status.ActionText = "Sakamoto (https://github.com/ilsubyeega/Sakamoto)";
-			bot.status.PlayMode = osu.Shared.GameMode.Standard;
+			bot.status.PlayMode = (byte)osu.Shared.GameMode.Standard;
 			UserCache.Add(bot);
 		}
 		public static void Chat() => Manager.ChatManager.Init();

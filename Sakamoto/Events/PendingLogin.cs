@@ -11,6 +11,9 @@ using System.IO;
 
 namespace Sakamoto.Events
 {
+	/// <summary>
+	/// This class handles pending login, which is client is connecting to sakamoto without osu-token.
+	/// </summary>
 	public static class PendingLogin
 	{
 		public static void Handle(MemoryStream st, SerializationWriter writer, out string token)
