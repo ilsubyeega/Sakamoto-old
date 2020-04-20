@@ -41,12 +41,12 @@ namespace Sakamoto.Events
 				UserCache.Add(user);
 
 				user.addQueue(new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)));
-				user.addQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString("Welcome to Sakamoto")));
+				user.addQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString($"Welcome to Sakamoto\nBuild Date: {Common.build_date.ToString("yyyy-MM-dd HH:mm")}")));
 
 				user.addQueue(new BanchoPacket(PacketType.ServerLoginReply, new BanchoInt(user.userid)));
 				user.addQueue(new BanchoPacket(PacketType.ServerUserPresence, user.ToPresence()));
 				user.addQueue(new BanchoPacket(PacketType.ServerUserData, user.ToUserData()));
-
+				
 				foreach (Channel channel in Manager.ChatManager.GetAutoJoinChannel(true))
 				{
 					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
@@ -65,6 +65,7 @@ namespace Sakamoto.Events
 					user.addQueue(new BanchoPacket(PacketType.ServerChatChannelAvailable,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
 						));
+				UserUtil.sendAllUser(user);
 				PacketUtil.WriteToStream(user.queue, writer);
 				user.ClearQueue();
 

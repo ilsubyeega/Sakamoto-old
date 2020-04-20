@@ -20,8 +20,8 @@ namespace Sakamoto
 			bot.userid = 2;
 			bot.chotoken = (TokenGenerator.Generate() + "bot");
 			bot.type = Enums.PlayerType.Bot;
-			bot.status.Action = HOPEless.osu.BanchoAction.Idle;
-			bot.status.ActionText = "Sakamoto (https://github.com/ilsubyeega/Sakamoto)";
+			bot.status.Action = HOPEless.osu.BanchoAction.Modding;
+			bot.status.ActionText = "Keesu";
 			bot.status.PlayMode = (byte)osu.Shared.GameMode.Standard;
 			UserCache.Add(bot);
 		}

@@ -84,10 +84,10 @@ namespace Sakamoto.Objects
 			{
 				UserId = this.userid,
 				Status = status,
-				RankedScore = 1000,
+				RankedScore = pp.GetRankedScoreByGame(gametype),
 				Accuracy = pp.GetAccByGame(gametype),
 				Playcount = pp.GetPlayCountByGame(gametype),
-				TotalScore = 1000,
+				TotalScore = pp.GetTotalScoreByGame(gametype),
 				Rank = 1,
 				Performance = pp.GetPerformanceByGame(gametype)
 			};
