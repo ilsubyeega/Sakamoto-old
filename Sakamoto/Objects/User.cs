@@ -70,7 +70,7 @@ namespace Sakamoto.Objects
 				Latitude = 1.2f,
 				Permissions = PlayerRank.Supporter,
 				Rank = 1,
-				PlayMode = GameTypeUtil.getShared(gametype)
+				PlayMode = (byte)GameTypeUtil.getShared(gametype)
 			};
 		}
 		public BanchoUserData ToUserData()
@@ -80,11 +80,11 @@ namespace Sakamoto.Objects
 				UserId = this.userid,
 				Status = status,
 				RankedScore = 1000,
-				Accuracy = 100f,
-				Playcount = pp.GetPlayCountByGame((GameType)status.PlayMode),
+				Accuracy = pp.GetAccByGame(gametype),
+				Playcount = pp.GetPlayCountByGame(gametype),
 				TotalScore = 1000,
 				Rank = 1,
-				Performance = pp.GetPerformanceByGame((GameType)status.PlayMode)
+				Performance = pp.GetPerformanceByGame(gametype)
 			};
 		}
 	}
@@ -101,18 +101,20 @@ namespace Sakamoto.Objects
 		static int totalgame = 7;
 
 		short[] pps = new short[7];
+		float[] acc = new float[7];
 		int[] playcount = new int[7];
 		long[] ranked_score = new long[7];
 		long[] total_score = new long[7];
 		public UserGame()
 		{
 			pps = new short[7] { 0, 0, 0, 0, 0, 0, 0 };
+			acc = new float[7] { 0, 0, 0, 0, 0, 0, 0 };
 			playcount = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
 			ranked_score = new long[7] { 0, 0, 0, 0, 0, 0, 0 };
 			total_score = new long[7] { 0, 0, 0, 0, 0, 0, 0 };
 
 		}
-		public UserGame(short[] pp_arg, int[] playcount_arg, long[] rankedscore_arg, long[] totalscore_arg)
+		public UserGame(short[] pp_arg, float[] acc_arg, int[] playcount_arg, long[] rankedscore_arg, long[] totalscore_arg)
 		{
 			pps = pp_arg;
 			playcount = playcount_arg;
@@ -128,6 +130,12 @@ namespace Sakamoto.Objects
 			if ((int)type > totalgame)
 				return 0;
 			return pps[(int)type];
+		}
+		public float GetAccByGame(GameType type)
+		{
+			if ((int)type > totalgame)
+				return 0;
+			return acc[(int)type];
 		}
 		public int GetPlayCountByGame(GameType type)
 		{
