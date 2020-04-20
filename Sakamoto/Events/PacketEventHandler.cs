@@ -8,25 +8,13 @@ namespace Sakamoto.Events
 	{
 		public static void Handle(BanchoPacket packet, User user)
 		{
-			switch (packet.Type)
+			Type class_type = Type.GetType($"Sakamoto.Events.Packet.{packet.Type}");
+			if (class_type==null || class_type.GetMethod("Handle") == null)
 			{
-				default:
-					Console.WriteLine("Not Handled this Packet: " + packet.Type);
-					break;
-				case PacketType.ClientDisconnect:
-					ClientDisconnect.Handle(packet, user);
-					break;
-				case PacketType.ClientPong:
-					ClientPong.Handle(packet, user);
-					break;
-				case PacketType.ClientUserStatus:
-					ClientUserStatus.Handle(packet, user);
-					break;
-				case PacketType.ClientUserStatsRequest:
-					ClientUserStatsRequest.Handle(packet, user);
-					break;
+				Console.WriteLine($"Not Handled this Packet: {packet.Type}");
+				return;
 			}
-
+			class_type.GetMethod("Handle").Invoke(null, new object[] { packet, user });
 		}
 	}
 }
