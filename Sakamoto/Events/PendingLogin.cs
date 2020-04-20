@@ -31,7 +31,7 @@ namespace Sakamoto.Events
 				user.username = loginarg.username;
 				user.username_safe = loginarg.username.ToLower();
 				user.chotoken = token;
-				user.pp = new UserGame(10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000);
+				user.pp = new UserGame();
 				user.block_nonfriend = loginarg.block_non_friend_dms;
 				user.timezone = loginarg.timezone;
 				user.countryid = 0;

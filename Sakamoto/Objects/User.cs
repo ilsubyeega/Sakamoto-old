@@ -4,7 +4,6 @@ using osu.Shared;
 using Sakamoto.Enums;
 using Sakamoto.Manager;
 using System.Collections.Generic;
-
 namespace Sakamoto.Objects
 {
 	public class User
@@ -92,91 +91,61 @@ namespace Sakamoto.Objects
 
 	public class UserGame
 	{
+		/* 
+		 * This is full list of total modes of osu!
+		 * 0~3 = osu!, osu!taiko, osu!catch, osu!mania
+		 * 4~6 = osu! (relax), osu!taiko (relax), osu!catch (relax)
+		 * 7 = osu! (autopilot) 
+		 * 4 + 3 + 1 - 1 = 7
+		 */
+		static int totalgame = 7;
+
+		short[] pps = new short[7];
+		int[] playcount = new int[7];
+		long[] ranked_score = new long[7];
+		long[] total_score = new long[7];
 		public UserGame()
 		{
+			pps = new short[7] { 0, 0, 0, 0, 0, 0, 0 };
+			playcount = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
+			ranked_score = new long[7] { 0, 0, 0, 0, 0, 0, 0 };
+			total_score = new long[7] { 0, 0, 0, 0, 0, 0, 0 };
 
 		}
-		public UserGame(short pp_osu, short pp_osutaiko, short pp_osucatch, short pp_osumania,
-			short pp_osu_relax, short pp_osutaiko_relax, short pp_osucatch_relax,
-			int playcount_osu, int playcount_osutaiko, int playcount_osucatch, int playcount_osumania,
-			int playcount_osu_relax, int playcount_osutaiko_relax, int playcount_osucatch_relax)
+		public UserGame(short[] pp_arg, int[] playcount_arg, long[] rankedscore_arg, long[] totalscore_arg)
 		{
-			this.pp_osu = pp_osu;
-			this.pp_osutaiko = pp_osutaiko;
-			this.pp_osucatch = pp_osucatch;
-			this.pp_osumania = pp_osumania;
-			this.pp_osu_relax = pp_osu_relax;
-			this.pp_osutaiko_relax = pp_osutaiko_relax;
-			this.pp_osucatch_relax = pp_osucatch_relax;
-			this.playcount_osu = playcount_osu;
-			this.playcount_osutaiko = playcount_osutaiko;
-			this.playcount_osucatch = playcount_osucatch;
-			this.playcount_osumania = playcount_osumania;
-			this.playcount_osu_relax = playcount_osu_relax;
-			this.playcount_osutaiko_relax = playcount_osutaiko_relax;
-			this.playcount_osucatch_relax = playcount_osucatch_relax;
+			pps = pp_arg;
+			playcount = playcount_arg;
+			ranked_score = rankedscore_arg;
+			total_score = totalscore_arg;
 		}
 
-
-		public short pp_osu;
-		public short pp_osutaiko;
-		public short pp_osucatch;
-		public short pp_osumania;
-		public short pp_osu_relax;
-		public short pp_osutaiko_relax;
-		public short pp_osucatch_relax;
-
-		public int playcount_osu;
-		public int playcount_osutaiko;
-		public int playcount_osucatch;
-		public int playcount_osumania;
-		public int playcount_osu_relax;
-		public int playcount_osutaiko_relax;
-		public int playcount_osucatch_relax;
+		
+		
 
 		public short GetPerformanceByGame(GameType type)
 		{
-			switch (type)
-			{
-				case GameType.Osu:
-					return pp_osu;
-				case GameType.OsuTaiko:
-					return pp_osutaiko;
-				case GameType.OsuCatch:
-					return pp_osucatch;
-				case GameType.OsuMania:
-					return pp_osumania;
-				case GameType.OsuRelax:
-					return pp_osu_relax;
-				case GameType.OsuTaikoRelax:
-					return pp_osutaiko_relax;
-				case GameType.OsuCatchRelax:
-					return pp_osucatch_relax;
-				default:
-					return 0;
-			}
+			if ((int)type > totalgame)
+				return 0;
+			return pps[(int)type];
 		}
 		public int GetPlayCountByGame(GameType type)
 		{
-			switch (type)
-			{
-				case GameType.Osu:
-					return playcount_osu;
-				case GameType.OsuTaiko:
-					return playcount_osutaiko;
-				case GameType.OsuCatch:
-					return playcount_osucatch;
-				case GameType.OsuMania:
-					return playcount_osumania;
-				case GameType.OsuRelax:
-					return playcount_osu_relax;
-				case GameType.OsuTaikoRelax:
-					return playcount_osutaiko_relax;
-				case GameType.OsuCatchRelax:
-					return playcount_osucatch_relax;
-				default:
-					return 0;
-			}
+			if ((int)type > totalgame)
+				return 0;
+			return playcount[(int)type];
+		}
+		public long GetRankedScoreByGame(GameType type)
+		{
+			if ((int)type > totalgame)
+				return 0;
+			return ranked_score[(int)type];
+		}
+		public long GetTotalScoreByGame(GameType type)
+		{
+			if ((int)type > totalgame)
+				return 0;
+			return total_score[(int)type];
 		}
 	}
 }
