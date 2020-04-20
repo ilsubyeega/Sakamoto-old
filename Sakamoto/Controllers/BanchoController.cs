@@ -6,6 +6,7 @@ using osu.Shared.Serialization;
 using Sakamoto.Cache;
 using Sakamoto.Events;
 using Sakamoto.Objects;
+using Sakamoto.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +58,13 @@ namespace Sakamoto.Controllers
 							{
 								PacketEventHandler.Handle(packet, u);
 							}
+							/*Console.WriteLine("");
+							foreach (BanchoPacket packet in u.queue) { 
+								Console.WriteLine(packet.ToString());
+							}*/
+							// Write
+							PacketUtil.WriteToStream(u.queue, writer);
+							u.ClearQueue();
 						}
 						else
 						{
@@ -76,9 +84,10 @@ namespace Sakamoto.Controllers
 
 
 					}
-					catch
+					catch (Exception e)
 					{
-						Console.WriteLine("The packet is invalid");
+						
+						Console.WriteLine("The packet is invalid\n"+ e.StackTrace);
 					}
 				}
 				ms.Position = 0;
