@@ -1,6 +1,7 @@
 ﻿using Sakamoto.Cache;
 using Sakamoto.Objects;
 using System;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace Sakamoto.Threads
@@ -22,7 +23,7 @@ namespace Sakamoto.Threads
 			timer = new Timer();
 			timer.Elapsed += AFKCheck;
 			timer.AutoReset = true;
-			timer.Interval = 1000 * 300;
+			timer.Interval = 1000 * 500;
 			timer.Start();
 			is_initalized = true;
 			Console.WriteLine("AFK Timer: Started");
@@ -33,18 +34,23 @@ namespace Sakamoto.Threads
 		/// </summary>
 		private static async void AFKCheck(Object source, ElapsedEventArgs e)
 		{
+			List<User> toremove = new List<User>();
 			long current = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 			foreach (User u in UserCache.userlist)
 			{
 				if (u.type == Enums.PlayerType.Player)
 				{
-					if (u.lasttimestamp + (1000 * 350) > current)
+					if (u.lasttimestamp + (1000 * 400) > current)
 					{
 						Console.WriteLine($"AFK Checker: User {u.username} ({u.userid}) is disconnected");
-						UserCache.Remove(u);
+						Console.WriteLine($"AFK Checker: Time Difference {(current- u.lasttimestamp)/1000}s");
+						toremove.Add(u);
 					}
 				}
 			}
+			foreach (User u in toremove)
+				UserCache.userlist.Remove(u);
+			
 		}
 	}
 }
