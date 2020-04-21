@@ -1,4 +1,5 @@
-﻿using Sakamoto.Cache;
+﻿using Microsoft.EntityFrameworkCore.Update.Internal;
+using Sakamoto.Cache;
 using Sakamoto.Objects;
 using Sakamoto.Util;
 
@@ -15,11 +16,12 @@ namespace Sakamoto
 		public static void CreateBot()
 		{
 			User bot = new User();
-			bot.username = "Sakamoto";
-			bot.username_safe = "sakamoto";
-			bot.userid = 2;
+			bot.username = Common.bot_name;
+			bot.username_safe = Common.bot_name.ToLower();
+			bot.userid = Common.bot_userid;
 			bot.chotoken = (TokenGenerator.Generate() + "bot");
 			bot.type = Enums.PlayerType.Bot;
+			bot.osuperm = osu.Shared.PlayerRank.Tournament;
 			bot.status.Action = HOPEless.osu.BanchoAction.Modding;
 			bot.status.ActionText = "Keesu";
 			bot.status.PlayMode = (byte)osu.Shared.GameMode.Standard;
