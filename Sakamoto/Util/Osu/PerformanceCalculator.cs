@@ -27,8 +27,6 @@ namespace Sakamoto.Util.Osu
 			}
 			Ruleset ruleset = LegacyHelper.GetRulesetFromID(modeid);
 			Mod[] mods = ruleset.ConvertFromLegacyMods((LegacyMods)modsint).ToArray();
-			foreach (Mod mod in mods)
-				Console.WriteLine(mod.Name);
 			ProcessorWorkingBeatmap working = new ProcessorWorkingBeatmap(beatmap_path, beatmap_id);
 			Score score = new ProcessorScoreDecoder(working).Parse(new ScoreInfo
 			{
@@ -37,15 +35,7 @@ namespace Sakamoto.Util.Osu
 				Mods = mods,
 				Statistics = stats
 			});
-			ScoreInfo k = score.ScoreInfo;
-			Dictionary<string, double> categoryRatings = new Dictionary<string, double>();
-			double a = ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate(categoryRatings);
-			foreach (KeyValuePair<string, double> entry in categoryRatings)
-			{
-				Console.WriteLine($"{entry.Key}: {entry.Value}");
-			}
-			Console.WriteLine(ruleset.ShortName);
-			return a;
+			return ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate();
 		}
 		
 	}
