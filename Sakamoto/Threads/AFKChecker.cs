@@ -17,7 +17,7 @@ namespace Sakamoto.Threads
 		/// <summary>
 		/// Initalize the timer. if already initalized, it will be do nothing.
 		/// </summary>
-		public static async void Initalize()
+		public static void Initalize()
 		{
 			if (is_initalized) return;
 			timer = new Timer();
@@ -32,7 +32,7 @@ namespace Sakamoto.Threads
 		/// Event of Timer. This void will check the afk users, and remove from <see cref="UserCache"/>.
 		/// User have to relogin because they aren't in <see cref="UserCache"/>.
 		/// </summary>
-		private static async void AFKCheck(Object source, ElapsedEventArgs e)
+		private static void AFKCheck(Object source, ElapsedEventArgs e)
 		{
 			List<User> toremove = new List<User>();
 			long current = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
