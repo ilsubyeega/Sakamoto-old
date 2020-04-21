@@ -19,6 +19,7 @@ namespace Sakamoto.Util.Osu
 		public static double Calculate(int beatmap_id, int modeid, int modsint, int maxcombo, Dictionary<HitResult, int> stats)
 		{
 			string beatmap_path = Path.Combine(Common.path_beatmaps, $"{beatmap_id}.osu");
+			Console.WriteLine(beatmap_path);
 			if (!File.Exists(beatmap_path))
 			{
 				Console.WriteLine($"Beatmap {beatmap_id} not found.");
@@ -36,7 +37,15 @@ namespace Sakamoto.Util.Osu
 				Mods = mods,
 				Statistics = stats
 			});
-			return ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate();
+			ScoreInfo k = score.ScoreInfo;
+			Dictionary<string, double> categoryRatings = new Dictionary<string, double>();
+			double a = ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate(categoryRatings);
+			foreach (KeyValuePair<string, double> entry in categoryRatings)
+			{
+				Console.WriteLine($"{entry.Key}: {entry.Value}");
+			}
+			Console.WriteLine(ruleset.ShortName);
+			return a;
 		}
 		
 	}
