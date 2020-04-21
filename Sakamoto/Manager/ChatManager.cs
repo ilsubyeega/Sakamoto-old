@@ -59,15 +59,15 @@ namespace Sakamoto.Manager
 		}
 		public static bool JoinedChannel(string name, int userid)
 		{
-			return channels.Any(a => a.name == "name" && a.playerlist.Contains(userid));
+			return channels.Any(a => a.name == name && a.playerlist.Contains(userid));
 		}
 		public static bool HasChannel(string name)
 		{
-			return channels.Any(a => a.name == "name");
+			return channels.Any(a => a.name == name);
 		}
 		public static Channel GetChannel(string name)
 		{
-			return channels.Where(a => a.name == "name").FirstOrDefault();
+			return channels.Where(a => a.name == name).FirstOrDefault();
 		}
 		public static Channel[] GetAutoJoinChannel(bool isauto)
 		{
@@ -78,7 +78,7 @@ namespace Sakamoto.Manager
 			return channels.Where(a => a.playerlist.Contains(userid)).ToArray();
 		}
 
-		public static void SendMessage(string name, int userid)
+		public static void SendMessage(string name, int userid, string message)
 		{
 			Channel channel = GetChannel(name);
 			if (channel == null) return;
