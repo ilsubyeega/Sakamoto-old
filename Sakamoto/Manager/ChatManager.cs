@@ -34,32 +34,30 @@ namespace Sakamoto.Manager
 			});
 			Initalized = true;
 		}
-		public static void JoinChannel(string name, int userid)
+		public static void JoinChannel(string name, User u)
 		{
-			User u = UserCache.GetUserById(userid);
 			if (u == null) return;
-			if (JoinedChannel(name, userid)) return;
+			if (JoinedChannel(name, u)) return;
 			if (!HasChannel(name)) return;
 			channels
 				.Where(instance => instance.name == name)
 				.ToList()
-				.ForEach(instance => instance.playerlist.Add(userid));
+				.ForEach(instance => instance.playerlist.Add(u));
 			u.AddQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(name)));
 		}
-		public static void LeaveChannel(string name, int userid)
+		public static void LeaveChannel(string name, User u)
 		{
-			User u = UserCache.GetUserById(userid);
 			if (u == null) return;
-			if (!JoinedChannel(name, userid)) return;
+			if (!JoinedChannel(name, u)) return;
 			channels
 				.Where(instance => instance.name == name)
 				.ToList()
-				.ForEach(instance => instance.playerlist.Remove(userid));
+				.ForEach(instance => instance.playerlist.Remove(u));
 			u.AddQueue(new BanchoPacket(PacketType.ServerChatChannelRevoked, new BanchoString(name)));
 		}
-		public static bool JoinedChannel(string name, int userid)
+		public static bool JoinedChannel(string name, User u)
 		{
-			return channels.Any(a => a.name == name && a.playerlist.Contains(userid));
+			return channels.Any(a => a.name == name && a.playerlist.Contains(u));
 		}
 		public static bool HasChannel(string name)
 		{
@@ -73,24 +71,30 @@ namespace Sakamoto.Manager
 		{
 			return channels.Where(a => a.autojoin == isauto).ToArray();
 		}
-		public static Channel[] GetListJoinedChannel(int userid)
+		public static Channel[] GetListJoinedChannel(User u)
 		{
-			return channels.Where(a => a.playerlist.Contains(userid)).ToArray();
+			return channels.Where(a => a.playerlist.Contains(u)).ToArray();
 		}
-
-		public static void SendMessage(string name, int userid, string message)
+		public static void RevokeChannel(string name, User u)
+		{
+			u.AddQueue(new BanchoPacket(PacketType.ServerChatChannelRevoked, new BanchoString(name)));
+		}
+		public static void SendMessage(string name, User u, string message)
 		{
 			Channel channel = GetChannel(name);
 			if (channel == null) return;
-			if (!JoinedChannel(name, userid)) return;
-			// Todo queue every joined member
+			if (!JoinedChannel(name, u))
+			{
+				RevokeChannel(name, u);
+				return;
+			};
+			foreach (User a in channel.playerlist)
+				a.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage(u.username, message, channel.name, u.userid)));
 		}
-		public static void SendMessageSecret(string name, int userid)
+		public static void SendMessageSecret(User input, User output, string message)
 		{
-			Channel channel = GetChannel(name);
-			if (channel == null) return;
-			if (!JoinedChannel(name, userid)) return;
-			// Todo queue every joined member
+			if (output == null) return;
+				output.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage(input.username, message, output.username, input.userid)));
 		}
 	}
 
@@ -103,6 +107,6 @@ namespace Sakamoto.Manager
 		{
 			return (short)playerlist.Count();
 		}
-		public List<int> playerlist = new List<int>();
+		public List<User> playerlist = new List<User>();
 	}
 }
