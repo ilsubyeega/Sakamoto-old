@@ -39,10 +39,10 @@ namespace Sakamoto.Objects
 
 		public Channel[] JoinedChannel()
 		{
-			return ChatManager.GetListJoinedChannel(userid);
+			return ChatManager.GetListJoinedChannel(this);
 		}
-		public void JoinChannel(string name) => ChatManager.JoinChannel(name, userid);
-		public void LeaveChannel(string name) => ChatManager.LeaveChannel(name, userid);
+		public void JoinChannel(string name) => ChatManager.JoinChannel(name, this);
+		public void LeaveChannel(string name) => ChatManager.LeaveChannel(name, this);
 
 		public List<int> friends = new List<int>();
 		public bool block_nonfriend;
@@ -52,6 +52,8 @@ namespace Sakamoto.Objects
 		public string chotoken;
 
 		public long lasttimestamp = 0;
+
+		public PlayerRank osuperm = PlayerRank.None;
 
 		public void AddQueue(BanchoPacket input)
 		{
@@ -73,7 +75,7 @@ namespace Sakamoto.Objects
 				CountryCode = countryid,
 				Longitude = 1.2f,
 				Latitude = 1.2f,
-				Permissions = PlayerRank.Supporter,
+				Permissions = osuperm,
 				Rank = 1,
 				PlayMode = (byte)GameTypeUtil.getShared(gametype)
 			};
