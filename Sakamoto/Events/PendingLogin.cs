@@ -38,7 +38,8 @@ namespace Sakamoto.Events
 					pp = new UserGame(),
 					block_nonfriend = loginarg.block_non_friend_dms,
 					timezone = loginarg.timezone,
-					countryid = 0
+					countryid = 0,
+					osuperm = osu.Shared.PlayerRank.SuperMod
 				};
 				UserCache.Add(user);
 
@@ -54,7 +55,7 @@ namespace Sakamoto.Events
 					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelAvailableAutojoin,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
 						));
-					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelJoinSuccess, new BanchoString(channel.name)));
+					ChatManager.JoinChannel(channel.name, user);
 				}
 				user.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage()
 				{
