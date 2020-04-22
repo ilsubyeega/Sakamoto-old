@@ -1,10 +1,8 @@
-﻿using osu.Game.Beatmaps.Legacy;
+﻿using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Scoring;
-using osu.Shared;
-using osuTK.Graphics.OpenGL;
+using osu.Game.Rulesets.Osu.Objects;
 using Sakamoto.Objects.Osu;
 using System;
 using System.Collections.Generic;
@@ -14,28 +12,30 @@ using System.Threading.Tasks;
 
 namespace Sakamoto.Util.Osu
 {
-	public class PerformanceCalculator
+	public static class ScoreStatusUtil
 	{
-		public static double Calculate(int beatmap_id, int modeid, int modsint, int maxcombo, Dictionary<HitResult, int> stats)
+		public static IBeatmap GetBeatmap(int beatmap_id, int modeid = 0, int modsint = 0)
 		{
 			string beatmap_path = Path.Combine(Common.path_beatmaps, $"{beatmap_id}.osu");
 			if (!File.Exists(beatmap_path))
 			{
 				Console.WriteLine($"Beatmap {beatmap_id} not found.");
-				return -1;
+				return null;
 			}
 			Ruleset ruleset = LegacyHelper.GetRulesetFromID(modeid);
 			Mod[] mods = ruleset.ConvertFromLegacyMods((LegacyMods)modsint).ToArray();
 			ProcessorWorkingBeatmap working = new ProcessorWorkingBeatmap(beatmap_path, beatmap_id);
-			Score score = new ProcessorScoreDecoder(working).Parse(new ScoreInfo
-			{
-				Ruleset = ruleset.RulesetInfo,
-				MaxCombo = maxcombo,
-				Mods = mods,
-				Statistics = stats
-			});
-			return ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate();
+			return working.GetPlayableBeatmap(ruleset.RulesetInfo, mods);
 		}
-		
+
+		// This is for osu! mode. Idk they are not working at another modes.
+		public static int GetHitObjectsCount(IBeatmap beatmap)
+		{
+			return beatmap.HitObjects.Count;
+		}
+		public static int GetMaxCombo(IBeatmap beatmap)
+		{
+			return beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
+		}
 	}
 }

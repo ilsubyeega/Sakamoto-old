@@ -14,6 +14,8 @@ namespace Sakamoto.Test.Tests
 		public static void Init()
 		{
 			Sakamoto.Common.path_beatmaps = Path.Combine(@"C:\Users\ilsubyeega\Documents", "Beatmaps");
+			Console.WriteLine("FullObj: {0}", Sakamoto.Util.Osu.ScoreStatusUtil.GetHitObjectsCount(Sakamoto.Util.Osu.ScoreStatusUtil.GetBeatmap(beatmapid, 0, 0)));
+			Console.WriteLine("Max Combo: {0}", Sakamoto.Util.Osu.ScoreStatusUtil.GetMaxCombo(Sakamoto.Util.Osu.ScoreStatusUtil.GetBeatmap(beatmapid, 0, 0)));
 			CalcDiff(); // 6.04*
 			CalcPP(); // Accroding to StreamCompanion = 277
 		}
@@ -29,6 +31,7 @@ namespace Sakamoto.Test.Tests
 					{ HitResult.Miss, 0 } // miss
 				};
 			Console.WriteLine("Performance Calculation Result: {0}", Sakamoto.Util.Osu.PerformanceCalculator.Calculate(beatmapid, 0, 0, 574, stats));
+			
 			stats = new Dictionary<HitResult, int>
 				{
 					{ HitResult.Great, 0 }, // 300
