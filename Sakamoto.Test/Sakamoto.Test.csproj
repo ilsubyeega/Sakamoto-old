@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Runtime.Caching" Version="5.0.0-preview.2.20160.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\osu.Shared\osu.Shared\osu.Shared.csproj" />
     <ProjectReference Include="..\osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj" />
     <ProjectReference Include="..\osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
