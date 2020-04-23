@@ -18,5 +18,6 @@ namespace Sakamoto
 		public static string path_replays = Path.Combine(path_data, "Replays");
 
 		public static MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(60 * 60));
+		public static string timestring = "2020-01-19T16:17:07";
 	}
 }
