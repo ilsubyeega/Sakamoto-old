@@ -45,7 +45,7 @@ namespace Sakamoto.Controllers
 				{
 					try
 					{
-						User u = UserCache.GetUserByToken(Request.Headers["osu-token"]);
+						User u = OnlineUserCache.GetUserByToken(Request.Headers["osu-token"]);
 						if (u != null)
 						{
 							// Read for debuging

@@ -9,7 +9,7 @@ namespace Sakamoto.Events.Packet
 	{
 		public static void Handle(BanchoPacket packet, User user)
 		{
-			UserCache.Remove(user);
+			OnlineUserCache.Remove(user);
 			Console.WriteLine($"{user.username} ({user.userid}) got disconnected.");
 		}
 	}

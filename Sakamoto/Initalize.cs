@@ -25,7 +25,7 @@ namespace Sakamoto
 			bot.status.Action = HOPEless.osu.BanchoAction.Modding;
 			bot.status.ActionText = "Keesu";
 			bot.status.PlayMode = (byte)osu.Shared.GameMode.Standard;
-			UserCache.Add(bot);
+			OnlineUserCache.Add(bot);
 		}
 		public static void Chat() => Manager.ChatManager.Init();
 		public static void Timer() => Threads.AFKChecker.Initalize();

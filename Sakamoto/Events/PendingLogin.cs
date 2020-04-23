@@ -41,7 +41,7 @@ namespace Sakamoto.Events
 					countryid = 0,
 					osuperm = osu.Shared.PlayerRank.SuperMod
 				};
-				UserCache.Add(user);
+				OnlineUserCache.Add(user);
 
 				user.AddQueue(new BanchoPacket(PacketType.ServerBanchoVersion, new BanchoInt(19)));
 				user.AddQueue(new BanchoPacket(PacketType.ServerNotification, new BanchoString($"Welcome to Sakamoto\nBuild Date: {Common.build_date:yyyy-MM-dd HH:mm}")));

@@ -8,7 +8,7 @@ namespace Sakamoto.Util
 	{
 		public static void SendAllUser(User u)
 		{
-			foreach (User i in UserCache.userlist)
+			foreach (User i in OnlineUserCache.userlist)
 			{
 				u.AddQueue(new BanchoPacket(PacketType.ServerUserPresence, i.ToPresence()));
 			}

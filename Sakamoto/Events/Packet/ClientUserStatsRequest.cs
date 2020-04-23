@@ -12,7 +12,7 @@ namespace Sakamoto.Events.Packet
 			BanchoIntList list = new BanchoIntList(packet.Data);
 			foreach (int inp in list.Value)
 			{
-				User a = UserCache.GetUserById(inp);
+				User a = OnlineUserCache.GetUserById(inp);
 				if (a == null) { 
 					u.AddQueue(new BanchoPacket(PacketType.ServerUserQuit, new BanchoUserQuit(inp)));
 				} else { 

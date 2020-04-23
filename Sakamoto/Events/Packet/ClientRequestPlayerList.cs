@@ -12,7 +12,7 @@ namespace Sakamoto.Events.Packet
 		{
 			BanchoInt status = new BanchoInt(packet.Data);
 			Console.WriteLine("s: " + status.Value);
-			foreach (User i in UserCache.userlist)
+			foreach (User i in OnlineUserCache.userlist)
 			{
 				user.AddQueue(new BanchoPacket(PacketType.ServerUserPresence, i.ToPresence()));
 			}

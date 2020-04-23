@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Sakamoto.Cache
 {
-	public static class UserCache
+	public static class OnlineUserCache
 	{
 		// This list is online lists.
 		public static List<User> userlist = new List<User>();

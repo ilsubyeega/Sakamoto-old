@@ -21,7 +21,7 @@ namespace Sakamoto.Events.Packet
 				BotPMEvent.Handle(user, msg);
 				return;
 			}
-			User to = UserCache.GetUserByName(msg.Channel);
+			User to = OnlineUserCache.GetUserByName(msg.Channel);
 			// User is offline.
 			if (to == null)
 			{

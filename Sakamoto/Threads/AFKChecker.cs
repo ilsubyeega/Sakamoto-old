@@ -29,14 +29,14 @@ namespace Sakamoto.Threads
 			Console.WriteLine("AFK Timer: Started");
 		}
 		/// <summary>
-		/// Event of Timer. This void will check the afk users, and remove from <see cref="UserCache"/>.
-		/// User have to relogin because they aren't in <see cref="UserCache"/>.
+		/// Event of Timer. This void will check the afk users, and remove from <see cref="OnlineUserCache"/>.
+		/// User have to relogin because they aren't in <see cref="OnlineUserCache"/>.
 		/// </summary>
 		private static void AFKCheck(Object source, ElapsedEventArgs e)
 		{
 			List<User> toremove = new List<User>();
 			long current = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-			foreach (User u in UserCache.userlist)
+			foreach (User u in OnlineUserCache.userlist)
 			{
 				if (u.type == Enums.PlayerType.Player)
 				{
@@ -49,7 +49,7 @@ namespace Sakamoto.Threads
 				}
 			}
 			foreach (User u in toremove)
-				UserCache.userlist.Remove(u);
+				OnlineUserCache.userlist.Remove(u);
 
 		}
 	}
