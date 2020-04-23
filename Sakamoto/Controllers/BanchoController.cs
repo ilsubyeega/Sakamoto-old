@@ -52,7 +52,7 @@ namespace Sakamoto.Controllers
 							MemoryStream st = new MemoryStream();
 							await Request.Body.CopyToAsync(st);
 							st.Position = 0;
-
+							u.lasttimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 							List<BanchoPacket> list = PacketParser.Parse(st);
 							foreach (BanchoPacket packet in list)
 							{
