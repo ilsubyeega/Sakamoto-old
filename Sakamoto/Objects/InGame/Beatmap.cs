@@ -1,9 +1,6 @@
 ﻿using osu.Shared;
 using Sakamoto.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Objects.InGame
 {
@@ -37,8 +34,8 @@ namespace Sakamoto.Objects.InGame
 		public string AppendToString()
 		{
 			string a = $"{(int)rankedstatus}|false";
-			if (rankedstatus != BeatmapSubmissionStatus.NotSubmitted && 
-				rankedstatus != BeatmapSubmissionStatus.Unknown && 
+			if (rankedstatus != BeatmapSubmissionStatus.NotSubmitted &&
+				rankedstatus != BeatmapSubmissionStatus.Unknown &&
 				rankedstatus != BeatmapSubmissionStatus.Need_Update)
 			{
 				a += $"|{beatmapid}|{beatmapsetid}|{totalscores}\n{offset}\n{artist} - {title}\n{rating}\n";

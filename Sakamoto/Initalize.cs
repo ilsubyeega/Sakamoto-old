@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Update.Internal;
-using Sakamoto.Cache;
+﻿using Sakamoto.Cache;
 using Sakamoto.Objects;
 using Sakamoto.Util;
 

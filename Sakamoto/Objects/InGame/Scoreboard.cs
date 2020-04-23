@@ -1,12 +1,7 @@
-﻿using FFmpeg.AutoGen;
-using Microsoft.EntityFrameworkCore.Internal;
-using osu.Game.Overlays.BeatmapSet.Scores;
-using Sakamoto.Enums;
-using System;
+﻿using Sakamoto.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Objects.InGame
 {
@@ -25,7 +20,8 @@ namespace Sakamoto.Objects.InGame
 			if (beatmap == null)
 			{
 				return $"{(int)BeatmapSubmissionStatus.NotSubmitted}|false";
-			} else
+			}
+			else
 			{
 				sb.Append(beatmap.AppendToString());
 			}
@@ -39,7 +35,7 @@ namespace Sakamoto.Objects.InGame
 					{
 						sb.Append(_ownscore.
 							AppendToString(
-							scores.FindIndex(a => a ==_ownscore).ToString()
+							scores.FindIndex(a => a == _ownscore).ToString()
 							));
 					}
 				}
@@ -51,8 +47,8 @@ namespace Sakamoto.Objects.InGame
 					sb.Append(s.AppendToString(i.ToString()));
 				}
 			}
-			
-			
+
+
 			return sb.ToString();
 		}
 	}

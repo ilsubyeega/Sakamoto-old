@@ -3,14 +3,11 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using osu.Shared;
-using osuTK.Graphics.OpenGL;
 using Sakamoto.Objects.Osu;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Util.Osu
 {
@@ -36,6 +33,6 @@ namespace Sakamoto.Util.Osu
 			});
 			return ruleset.CreatePerformanceCalculator(working, score.ScoreInfo).Calculate();
 		}
-		
+
 	}
 }

@@ -9,27 +9,27 @@ using Sakamoto.Util.Osu;
 
 namespace Sakamoto.Objects.Osu
 {
-    /// <summary>
-    /// A <see cref="LegacyScoreDecoder"/> which has a predefined beatmap and rulesets.
-    /// </summary>
-    public class ProcessorScoreDecoder : LegacyScoreDecoder
-    {
-        private readonly WorkingBeatmap beatmap;
+	/// <summary>
+	/// A <see cref="LegacyScoreDecoder"/> which has a predefined beatmap and rulesets.
+	/// </summary>
+	public class ProcessorScoreDecoder : LegacyScoreDecoder
+	{
+		private readonly WorkingBeatmap beatmap;
 
-        public ProcessorScoreDecoder(WorkingBeatmap beatmap)
-        {
-            this.beatmap = beatmap;
-        }
+		public ProcessorScoreDecoder(WorkingBeatmap beatmap)
+		{
+			this.beatmap = beatmap;
+		}
 
-        public Score Parse(ScoreInfo scoreInfo)
-        {
-            var score = new Score { ScoreInfo = scoreInfo };
-            CalculateAccuracy(score.ScoreInfo);
-            return score;
-        }
+		public Score Parse(ScoreInfo scoreInfo)
+		{
+			var score = new Score { ScoreInfo = scoreInfo };
+			CalculateAccuracy(score.ScoreInfo);
+			return score;
+		}
 
-        protected override Ruleset GetRuleset(int rulesetId) => LegacyHelper.GetRulesetFromID(rulesetId);
+		protected override Ruleset GetRuleset(int rulesetId) => LegacyHelper.GetRulesetFromID(rulesetId);
 
-        protected override WorkingBeatmap GetBeatmap(string md5Hash) => beatmap;
-    }
+		protected override WorkingBeatmap GetBeatmap(string md5Hash) => beatmap;
+	}
 }

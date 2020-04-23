@@ -4,9 +4,6 @@ using Sakamoto.Cache;
 using Sakamoto.Manager;
 using Sakamoto.Objects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Events.Packet
 {

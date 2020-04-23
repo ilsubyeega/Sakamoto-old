@@ -6,10 +6,10 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage(
-    "Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores",
-    Justification = "Test methods require underscores for readability.",
-    Scope = "Sakamoto")]
+	"Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores",
+	Justification = "Test methods require underscores for readability.",
+	Scope = "Sakamoto")]
 [assembly: SuppressMessage(
-    "Style", "IDE0060:사용하지 않는 매개 변수를 제거하세요.",
-    Justification = "<보류 중>",
-    Scope = "Sakamoto")]
+	"Style", "IDE0060:사용하지 않는 매개 변수를 제거하세요.",
+	Justification = "<보류 중>",
+	Scope = "Sakamoto")]

@@ -1,6 +1,5 @@
 ﻿using HOPEless.Bancho;
 using HOPEless.Bancho.Objects;
-using Sakamoto.Cache;
 using Sakamoto.Manager;
 using Sakamoto.Objects;
 using System;
@@ -23,8 +22,8 @@ namespace Sakamoto.Events.Packet
 				BotCommandEvent.Handle(user, msg);
 			ChatManager.SendMessage(msg.Channel, user, msg.Message);
 			return;
-			
-			
+
+
 		}
 	}
 }

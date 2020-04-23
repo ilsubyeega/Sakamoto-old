@@ -1,12 +1,9 @@
 ﻿using osu.Game.Rulesets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Taiko;
+using System;
 
 namespace Sakamoto.Util.Osu
 {

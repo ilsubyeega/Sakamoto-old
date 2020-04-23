@@ -1,17 +1,9 @@
 ﻿using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets;
-using osu.Game.Rulesets.Catch.Difficulty;
 using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.Mania.Difficulty;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Osu.Difficulty;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Taiko.Difficulty;
-using osu.Game.Scoring;
-using osu.Shared;
 using Sakamoto.Objects.Osu;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 namespace Sakamoto.Util.Osu

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using HOPEless.Bancho;
+using HOPEless.Bancho.Objects;
+using Sakamoto.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Sakamoto.Objects;
-using HOPEless.Bancho.Objects;
-using HOPEless.Bancho;
 
 namespace Sakamoto.Events
 {
@@ -21,10 +20,11 @@ namespace Sakamoto.Events
 					{
 						int b_id = int.Parse(msg[4].Substring(22));
 						SendMsg(user, $"Beatmap Information\nBeatmap: {GetBeatmapMsgFromStringList(msg)}  ({b_id})");
-						
+
 					}
 				}
-			} catch { }
+			}
+			catch { }
 		}
 		private static string GetBeatmapMsgFromStringList(string[] a)
 		{
@@ -33,11 +33,11 @@ namespace Sakamoto.Events
 			return String.Join(" ", _tmp).Substring(0, String.Join(" ", _tmp).Length - 2);
 		}
 		private static void SendMsg(User user, String message) => user.AddQueue(new BanchoPacket(
-			PacketType.ServerChatMessage, 
+			PacketType.ServerChatMessage,
 			new BanchoChatMessage(
-				Common.bot_name, 
-				message, 
-				user.username, 
+				Common.bot_name,
+				message,
+				user.username,
 				Common.bot_userid)
 			)
 		);

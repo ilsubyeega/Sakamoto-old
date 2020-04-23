@@ -1,11 +1,5 @@
-﻿using osu.Framework.Input.Bindings;
-using osu.Shared;
-using Sakamoto.Enums;
+﻿using osu.Shared;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Objects.InGame
 {
@@ -52,7 +46,7 @@ namespace Sakamoto.Objects.InGame
 				count_miss,
 				count_katu,
 				count_geki,
-				isFullCombo ? "0": "1",
+				isFullCombo ? "0" : "1",
 				mods,
 				userid,
 				rank,

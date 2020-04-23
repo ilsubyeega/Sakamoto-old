@@ -1,6 +1,5 @@
 ﻿using HOPEless.Bancho;
 using HOPEless.Bancho.Objects;
-using Sakamoto.Cache;
 using Sakamoto.Objects;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,7 +93,7 @@ namespace Sakamoto.Manager
 		public static void SendMessageSecret(User input, User output, string message)
 		{
 			if (output == null) return;
-				output.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage(input.username, message, output.username, input.userid)));
+			output.AddQueue(new BanchoPacket(PacketType.ServerChatMessage, new BanchoChatMessage(input.username, message, output.username, input.userid)));
 		}
 	}
 
