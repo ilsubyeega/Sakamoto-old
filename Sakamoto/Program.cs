@@ -16,9 +16,9 @@ namespace Sakamoto
 					builder.UseKestrel(config =>
 					{
 						config.Limits.MaxRequestBodySize = null;
-						config.Listen(IPAddress.Loopback, 20002);
 					});
 					builder.UseStartup<Startup>();
+					builder.UseUrls("http://localhost:20002");
 				})
 				.StartAsync();
 		}
