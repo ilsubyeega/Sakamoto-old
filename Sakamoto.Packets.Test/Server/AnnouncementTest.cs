@@ -10,7 +10,7 @@ namespace Sakamoto.Packets.Test.Server
    public partial class ServerPacketTests
    {
       [TestCase("Hello, world!", Description = "Simple plain english characters encoding test")]
-      [TestCase("이것은 시험이다", Description = "Test that involves UTF-8 encoded characters")]
+      [TestCase("UTF-8 인코딩 테스트", Description = "Test that involves UTF-8 encoded characters")]
       public void AnnouncementTest(string message)
       {
          using var stream = new MemoryStream();
