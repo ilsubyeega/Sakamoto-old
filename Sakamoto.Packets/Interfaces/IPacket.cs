@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-using Sakamoto.Enums;
+using Sakamoto.Packets.Enums;
 
-namespace Sakamoto.Interfaces
+namespace Sakamoto.Packets.Interfaces
 {
    public interface IPacket
    {

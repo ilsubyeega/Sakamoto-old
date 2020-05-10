@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-using Sakamoto.Enums;
-using Sakamoto.Interfaces;
+using Sakamoto.Packets.Enums;
+using Sakamoto.Packets.Interfaces;
 
-namespace Sakamoto.IO
+namespace Sakamoto.Packets
 {
    public abstract class BasePacket : IPacket
    {
-      protected void ReadInternal(BinaryReader reader, PacketId id,
+      protected static void ReadInternal(BinaryReader reader, PacketId id,
          PacketSerializationMode serializationMode = PacketSerializationMode.Full)
       {
          if ((serializationMode & PacketSerializationMode.ReadId) > 0)
@@ -22,7 +22,7 @@ namespace Sakamoto.IO
             reader.ReadByte();
       }
 
-      protected void WriteInternal(BinaryWriter writer, PacketId id, byte[] bodyData)
+      protected static void WriteInternal(BinaryWriter writer, PacketId id, byte[] bodyData)
       {
          writer.Write((short) id);
          writer.Write((byte) 0);

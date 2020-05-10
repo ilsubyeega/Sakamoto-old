@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-using Sakamoto.Enums;
-using Sakamoto.Extensions;
+using Sakamoto.Packets.Enums;
+using Sakamoto.Packets.Extensions;
 
-namespace Sakamoto.IO.Packets
+namespace Sakamoto.Packets.Server
 {
    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
    public class Announcement : BasePacket

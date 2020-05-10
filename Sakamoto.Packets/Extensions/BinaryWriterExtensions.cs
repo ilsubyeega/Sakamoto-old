@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Text;
-using Sakamoto.Enums;
-using Sakamoto.Interfaces;
 
-namespace Sakamoto.Extensions
+using Sakamoto.Packets.Enums;
+using Sakamoto.Packets.Interfaces;
+
+namespace Sakamoto.Packets.Extensions
 {
    public static class BinaryWriterExtensions
    {

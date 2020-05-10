@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sakamoto", "Sakamoto\Sakamoto.csproj", "{1B4145CB-776D-4028-9B49-6887029D7601}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sakamoto.Packets", "Sakamoto.Packets\Sakamoto.Packets.csproj", "{FCD95A4C-103D-406D-9084-33F96FE18CC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sakamoto.Packets.Test", "Sakamoto.Packets.Test\Sakamoto.Packets.Test.csproj", "{2D0E9647-1912-4A42-B198-62E7C038B885}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{1B4145CB-776D-4028-9B49-6887029D7601}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B4145CB-776D-4028-9B49-6887029D7601}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B4145CB-776D-4028-9B49-6887029D7601}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD95A4C-103D-406D-9084-33F96FE18CC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD95A4C-103D-406D-9084-33F96FE18CC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD95A4C-103D-406D-9084-33F96FE18CC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD95A4C-103D-406D-9084-33F96FE18CC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D0E9647-1912-4A42-B198-62E7C038B885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0E9647-1912-4A42-B198-62E7C038B885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0E9647-1912-4A42-B198-62E7C038B885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0E9647-1912-4A42-B198-62E7C038B885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

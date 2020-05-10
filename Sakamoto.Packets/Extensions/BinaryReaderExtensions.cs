@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Sakamoto.Enums;
-using Sakamoto.Interfaces;
-using Sakamoto.IO.Packets;
 
-namespace Sakamoto.Extensions
+using Sakamoto.Packets.Enums;
+using Sakamoto.Packets.Interfaces;
+using Sakamoto.Packets.Server;
+
+namespace Sakamoto.Packets.Extensions
 {
    public static class BinaryReaderExtensions
    {

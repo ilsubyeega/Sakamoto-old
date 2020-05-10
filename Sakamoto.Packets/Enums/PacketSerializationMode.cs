@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sakamoto.Enums
+namespace Sakamoto.Packets.Enums
 {
    [Flags]
    public enum PacketSerializationMode

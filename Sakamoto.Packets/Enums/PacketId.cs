@@ -1,4 +1,4 @@
-﻿namespace Sakamoto.Enums
+﻿namespace Sakamoto.Packets.Enums
 {
    public enum PacketId
    {

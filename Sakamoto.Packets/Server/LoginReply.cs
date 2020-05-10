@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-using Sakamoto.Enums;
-using Sakamoto.Interfaces;
+using Sakamoto.Packets.Enums;
 
-namespace Sakamoto.IO.Packets
+namespace Sakamoto.Packets.Server
 {
    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
    public class LoginReply : BasePacket
