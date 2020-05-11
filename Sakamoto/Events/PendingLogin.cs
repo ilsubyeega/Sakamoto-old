@@ -1,5 +1,6 @@
 ﻿using HOPEless.Bancho;
 using HOPEless.Bancho.Objects;
+using Microsoft.AspNetCore.Identity;
 using osu.Shared.Serialization;
 using Sakamoto.Cache;
 using Sakamoto.Manager;
@@ -8,6 +9,7 @@ using Sakamoto.Packet.Objects.Args;
 using Sakamoto.Util;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Sakamoto.Events
 {
@@ -68,7 +70,7 @@ namespace Sakamoto.Events
 					user.AddQueue(new BanchoPacket(PacketType.ServerChatChannelAvailable,
 						new BanchoChatChannel(channel.name, channel.description, channel.GetUserCount())
 						));
-				UserUtil.SendAllUser(user);
+				user.AddQueue(new BanchoPacket(PacketType.ServerUserPresenceBundle, new BanchoIntList(OnlineUserCache.userlist.Select(u => u.userid))));
 				PacketUtil.WriteToStream(user.queue, writer);
 				user.ClearQueue();
 
