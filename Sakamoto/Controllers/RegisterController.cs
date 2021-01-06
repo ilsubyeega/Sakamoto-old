@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sakamoto.Database;
+using Sakamoto.Database.Models;
+using Sakamoto.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Sakamoto.Controllers
 {
@@ -10,10 +15,13 @@ namespace Sakamoto.Controllers
 	[ApiController]
 	public class RegisterController : ControllerBase
 	{
+		private readonly MariaDBContext _dbcontext;
+		public RegisterController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; } 
+
 		// POST /users
 		[HttpPost("users")]
 		[AllowAnonymous]
-		public IActionResult Register()
+		public async Task<IActionResult> Register()
 		{
 			// todo "User registration is currently disabled"
 			// todo Check Ip Ban
@@ -28,13 +36,10 @@ namespace Sakamoto.Controllers
 			};
 			string username, user_email, password;
 
-			if (!data.ContainsKey("user[username]")) CreateError("username", "The requested username is not found.", result.form_error.user);
-			if (!data.ContainsKey("user[user_email]")) CreateError("user_email", "The requested email is not found.", result.form_error.user);
-			if (!data.ContainsKey("user[password]")) CreateError("password", "The requested password is not found.", result.form_error.user);
+			if (!data.TryGetValue("user[username]", out username)) CreateError("username", "The requested username is not found.", result.form_error.user);
+			if (!data.TryGetValue("user[user_email]", out user_email)) CreateError("user_email", "The requested email is not found.", result.form_error.user);
+			if (!data.TryGetValue("user[password]", out password)) CreateError("password", "The requested password is not found.", result.form_error.user);
 
-			data.TryGetValue("user[username]", out username);
-			data.TryGetValue("user[user_email]", out user_email);
-			data.TryGetValue("user[password]", out password);
 
 			if (result.form_error.user.Count > 0
 				|| !ValidateUsername(username, result.form_error.user)
@@ -43,11 +48,27 @@ namespace Sakamoto.Controllers
 			{
 				return StatusCode(422, result);
 			}
-			/*
-			 * TODO: Save the form to the database.
-			 * at time lazer will request the token after successful registeration.
-			 * Should return registered user object.
-			 */
+			try
+			{
+				var currentdate = DateTimeOffset.Now.ToUnixTimeSeconds();
+				var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+				var dbuser = new DBUser
+				{
+					UserName = username,
+					Email = user_email,
+					Password = CryptoUtil.EncodeScrypt(CryptoUtil.GetMD5Hash(password)),
+					LastIP = ip,
+					LastVisit = currentdate,
+					RegisterationDate = currentdate,
+					Language = 0,
+					Country = GeoUtil.GetByIP(ip),
+				};
+				_dbcontext.Users.Add(dbuser);
+				await _dbcontext.SaveChangesAsync();
+			} catch (Exception e)
+			{
+				return StatusCode(422, new { error = "this is server side error, its error is logged and developer will investiage this issue." });
+			}
 			return StatusCode(200, new { result = "ok" });
 		}
 
@@ -65,6 +86,10 @@ namespace Sakamoto.Controllers
 				return CreateError("username", "Please use either underscores or spaces, not both!", error);
 			// todo: not allowed names
 			// todo: check used username
+			var b = _dbcontext.Users.FirstOrDefault(a => a.UserName.ToLower() == name.ToLower());
+			if (b != null)
+				return CreateError("username", "That user is already exists.", error);
+
 			return true;
 		}
 		private bool ValidatePassword(string name, string password, Dictionary<string, List<string>> error)
@@ -92,7 +117,10 @@ namespace Sakamoto.Controllers
 				return CreateError("user_email", "Doesn't seem to be a valid email address.", error);
 			}
 			// check banned emails for alt emails etc
-			// todo check used email
+			var b = _dbcontext.Users.FirstOrDefault(a => a.Email.ToLower() == email.ToLower());
+			if (b != null)
+				return CreateError("user_email", "That email is already used.", error);
+
 			return true;
 		}
 

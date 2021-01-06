@@ -3,22 +3,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text.Unicode;
 using Newtonsoft.Json;
+using Sakamoto.Database;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace Sakamoto
@@ -45,7 +40,19 @@ namespace Sakamoto
 				l.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
 				l.AddConsole();
 			});
-
+			services.AddDbContext<MariaDBContext>(
+				options =>
+				{
+					options.UseMySql("server=localhost;port=3306;database=keesu;uid=dev;password=dev", MariaDbServerVersion.LatestSupportedServerVersion,
+					   mySqlOptionsAction: sqlOptions =>
+					   {
+						   sqlOptions.EnableRetryOnFailure(
+							  maxRetryCount: 20,
+							  maxRetryDelay: TimeSpan.FromSeconds(10),
+							  errorNumbersToAdd: null);
+					   });
+				}
+			);
 
 			services.AddAuthentication(cfg =>
 			{
