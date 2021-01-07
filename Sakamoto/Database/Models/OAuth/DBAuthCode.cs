@@ -14,16 +14,16 @@ namespace Sakamoto.Database.Models.OAuth
 		[Column("id")]
 		public string Id { get; set; }
 		[Column("user_id")]
-		public int UserId { get; set; }
+		public long UserId { get; set; }
 		[Column("client_id")]
-		public int ClientId { get; set; }
+		public long ClientId { get; set; }
 		[Column("scopes")]
 		public string Scopes { get; set; }
 		[Column("revoked")]
 		public bool Revoked { get; set; }
 		[Column("created_at")]
-		public int CreatedAt { get; set; }
+		public long CreatedAt { get; set; }
 		[Column("expires_at")]
-		public int ExpiresAt { get; set; }
+		public long? ExpiresAt { get; set; }
 	}
 }

@@ -8,7 +8,7 @@ namespace Sakamoto.Database.Models
 	{
 		[Key]
 		[Column("user_id")]
-		public uint Id { get; set; }
+		public long Id { get; set; }
 		[Column("user_type")]
 		public byte UserType { get; set; }
 		[Column("username")]
@@ -20,9 +20,9 @@ namespace Sakamoto.Database.Models
 
 
 		[Column("user_permissions")]
-		public uint UserPermissions { get; set; }
+		public long UserPermissions { get; set; }
 		[Column("user_debuff")]
-		public uint UserDebuff { get; set; }
+		public long UserDebuff { get; set; }
 
 
 		[Column("user_supporter_level")]
@@ -34,9 +34,9 @@ namespace Sakamoto.Database.Models
 		[Column("user_ip")]
 		public string LastIP { get; set; }
 		[Column("user_lastvisit")]
-		public long LastVisit { get; set; }
+		public long? LastVisit { get; set; }
 		[Column("user_regdate")]
-		public long RegisterationDate { get; set; }
+		public long? RegisterationDate { get; set; }
 		[Column("user_pwweak")]
 		public bool IsPasswordWeak { get; set; }
 		[Column("user_last_confirm_key")]
@@ -44,19 +44,19 @@ namespace Sakamoto.Database.Models
 
 
 		[Column("user_lang")]
-		public byte Language { get; set; }
+		public byte? Language { get; set; }
 		[Column("user_country")]
 		public string Country { get; set; }
 		[Column("user_timezone")]
 		public decimal Timezone { get; set; }
 		[Column("user_playstyle")]
-		public uint PlayStyle { get; set; }
+		public long PlayStyle { get; set; }
 		[Column("user_playmode")]
 		public byte PlayMode { get; set; }
 		[Column("user_color")]
-		public byte PageColor { get; set; }
+		public byte? PageColor { get; set; }
 		[Column("osu_id")]
-		public uint OsuId { get; set; }
+		public long? OsuId { get; set; }
 
 
 		[Column("hidden_online")]
@@ -66,7 +66,7 @@ namespace Sakamoto.Database.Models
 
 
 		[Column("group_id")]
-		public uint GroupID { get; set; }
+		public long GroupID { get; set; }
 
 
 		[Column("c_locations")]

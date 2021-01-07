@@ -13,13 +13,13 @@ namespace Sakamoto.Database.Models.OAuth
 		[Key]
 		[Column("id")]
 		public string Id { get; set; }
-		[Column("access_code_id")]
-		public string AccessCode { get; set; }
+		[Column("access_token_id")]
+		public string AccessToken { get; set; }
 		[Column("revoked")]
 		public bool Revoked { get; set; }
 		[Column("created_at")]
-		public int CreatedAt { get; set; }
+		public long? CreatedAt { get; set; }
 		[Column("expires_at")]
-		public int ExpiresAt { get; set; }
+		public long? ExpiresAt { get; set; }
 	}
 }

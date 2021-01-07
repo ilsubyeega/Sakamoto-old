@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Sakamoto.Database;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Text;
 
 namespace Sakamoto
@@ -76,27 +77,24 @@ namespace Sakamoto
 					{
 						Console.WriteLine("Log");
 						var token = (JwtSecurityToken)context.SecurityToken;
-						var obj = (object)null;
-						if (obj == null)
+						var id = token.Claims.FirstOrDefault(claim => claim.Type == "token").Value;
+						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
+						var obj = dbcontext.AccessTokens.Any(ac => ac.Id == id && ac.Revoked == false);
+						if (!obj)
 						{
-							context.Response.Clear();
-							context.Response.StatusCode = 401;
-							var res = JsonConvert.SerializeObject(new { a = "owo" });
-							await context.Response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(res));
+							context.Fail("auth failed");
 						}
 						else
 						{
-							Console.WriteLine(token.RawData);
-							Console.WriteLine(obj);
-
 							context.Success();
 						}
 					},
 					OnAuthenticationFailed = async context =>
 					{
+						Console.WriteLine("fail fail uwu");
 						context.Response.Clear();
 						context.Response.StatusCode = 401;
-						var res = JsonConvert.SerializeObject(new { a = "auth failed" });
+						var res = JsonConvert.SerializeObject(new { auth = "auth failed" });
 						await context.Response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(res));
 					}
 				};
@@ -156,6 +154,7 @@ namespace Sakamoto
 			{
 				endpoints.MapControllers();
 			});
+			
 		}
 	}
 }

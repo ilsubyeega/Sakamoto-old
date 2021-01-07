@@ -12,9 +12,9 @@ namespace Sakamoto.Database.Models.OAuth
 	{
 		[Key]
 		[Column("id")]
-		public int Id { get; set; }
+		public long Id { get; set; }
 		[Column("user_id")]
-		public int UserId { get; set; }
+		public long? UserId { get; set; }
 		[Column("name")]
 		public string Name { get; set; }
 		[Column("secret")]
@@ -26,8 +26,8 @@ namespace Sakamoto.Database.Models.OAuth
 		[Column("revoked")]
 		public bool Revoked { get; set; }
 		[Column("created_at")]
-		public int CreatedAt { get; set; }
+		public long? CreatedAt { get; set; }
 		[Column("updated_at")]
-		public int UpdatedAt { get; set; }
+		public long? UpdatedAt { get; set; }
 	}
 }
