@@ -55,7 +55,7 @@ namespace Sakamoto.Controllers
 					return StatusCode(401, new { error = "Wrong Body." });
 				}
 				
-				var client = _dbcontext.Clients.FirstOrDefault(c => c.Id == client_id && c.Secret == client_secret);
+				var client = _dbcontext.Clients.FirstOrDefault(c => c.Id == client_id && c.Secret == client_secret && c.Revoked == false);
 				Console.WriteLine("A");
 				if (client == null) return StatusCode(401, new { error = "Client not found." });
 
@@ -77,7 +77,8 @@ namespace Sakamoto.Controllers
 							if (refresh_claim is null) return StatusCode(401, new { error = "Wrong Validated Token." });
 							var refresh_token = refresh_claim.Value;
 
-							var refresh = _dbcontext.RefreshTokens.FirstOrDefault(a => a.Id == refresh_token && a.Revoked == false);
+							var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+							var refresh = _dbcontext.RefreshTokens.FirstOrDefault(a => a.Id == refresh_token && a.Revoked == false && a.ExpiresAt > timestamp);
 							if (refresh is null)
 								return StatusCode(401, "Wrong token.");
 							var access = _dbcontext.AccessTokens.FirstOrDefault(a => a.Id == refresh.AccessToken); // this should be setted.
@@ -90,7 +91,6 @@ namespace Sakamoto.Controllers
 
 							var accesstoken = JwtUtil.GenerateToken(randomAccess);
 							var refreshtoken = JwtUtil.GenerateRefreshToken(randomRefresh);
-							var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
 							access.Revoked = true;
 							refresh.Revoked = true;
@@ -189,40 +189,6 @@ namespace Sakamoto.Controllers
 			return Ok("owo!");
 		}
 
-
-		/*
-		[HttpPost("token_refresh")]
-		[AllowAnonymous]
-		public IActionResult RefreshToken([FromForm] string token)
-		{
-			if (token == null) return Ok("token is null");
-			var value = Common.ValidatedOauth.FirstOrDefault(o => o.refresh_token == token);
-			if (value != null)
-			{
-				var access = JwtUtil.GenerateToken((int)value.id);
-				var refresh = JwtUtil.GenerateRefreshToken((int)value.id);
-
-				value.access_token = access;
-				value.refresh_token = refresh;
-
-				return Ok(new OauthResult(value));
-			}
-			return Ok("Token not found");
-		}
-
-		[HttpGet("test")]
-		[AllowAnonymous]
-		public IActionResult Test()
-		{
-			return Ok("Test");
-		}
-
-		[HttpGet("test_auth")]
-		[Authorize]
-		public IActionResult TestAuth()
-		{
-			return Ok("test");
-		}*/
 		private string GenerateRandomUntilNotExists(bool isRefresh)
 		{
 			string random = JwtUtil.RandomString();

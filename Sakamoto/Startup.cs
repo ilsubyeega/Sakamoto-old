@@ -79,7 +79,7 @@ namespace Sakamoto
 						var token = (JwtSecurityToken)context.SecurityToken;
 						var id = token.Claims.FirstOrDefault(claim => claim.Type == "token").Value;
 						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
-						var obj = dbcontext.AccessTokens.Any(ac => ac.Id == id && ac.Revoked == false);
+						var obj = dbcontext.AccessTokens.Any(ac => ac.Id == id && ac.Revoked == false && ac.ExpiresAt > DateTimeOffset.Now.ToUnixTimeSeconds());
 						if (!obj)
 						{
 							context.Fail("auth failed");
