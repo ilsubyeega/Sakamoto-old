@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -44,5 +45,22 @@ namespace Sakamoto.Util
 			return new string(Enumerable.Repeat(chars, length)
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
+
+		public static string GetIdFromHttpContext(HttpContext context)
+		{
+			var identity = context.User.Identity as ClaimsIdentity;
+			return GetIdFromClaimsIdentity(identity);
+		}
+		public static string GetIdFromClaimsIdentity(ClaimsIdentity identity)
+		{
+			if (identity != null)
+			{
+				var claims = identity.Claims;
+				var id = claims.FirstOrDefault(a => a.Type == "token");
+				return id.Value;
+			}
+			return null;
+		}
+		
 	}
 }
