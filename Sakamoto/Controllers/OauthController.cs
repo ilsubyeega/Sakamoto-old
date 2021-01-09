@@ -132,6 +132,7 @@ namespace Sakamoto.Controllers
 
 							var password_hashed = CryptoUtil.GetMD5Hash(password);
 							var user = _dbcontext.Users.FirstOrDefault(obj => obj.UserName.ToLower() == username);
+							if (user == null) return StatusCode(401, new { error = "Username not found." });
 							if (!CryptoUtil.CheckScrypt(password_hashed, user.Password)) return StatusCode(401, new { error = "Wrong Password." });
 
 							// Generate
