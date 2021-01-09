@@ -8,7 +8,7 @@ namespace Sakamoto.Database.Models
 	{
 		[Key]
 		[Column("user_id")]
-		public long Id { get; set; }
+		public int Id { get; set; }
 		[Column("user_type")]
 		public byte UserType { get; set; }
 		[Column("username")]
@@ -34,9 +34,9 @@ namespace Sakamoto.Database.Models
 		[Column("user_ip")]
 		public string LastIP { get; set; }
 		[Column("user_lastvisit")]
-		public long? LastVisit { get; set; }
+		public double? LastVisit { get; set; }
 		[Column("user_regdate")]
-		public long? RegisterationDate { get; set; }
+		public double? RegisterationDate { get; set; }
 		[Column("user_pwweak")]
 		public bool IsPasswordWeak { get; set; }
 		[Column("user_last_confirm_key")]
@@ -68,6 +68,8 @@ namespace Sakamoto.Database.Models
 		[Column("group_id")]
 		public long GroupID { get; set; }
 
+		[Column("score_first_count")]
+		public int ScoreFirstCount { get; set; }
 
 		[Column("c_locations")]
 		public string CustomLocations { get; set; }
