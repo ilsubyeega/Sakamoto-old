@@ -52,21 +52,21 @@ namespace Sakamoto.Database.Models
 		[Column("performance")]
 		public decimal Performance { get; set; }
 		[Column("rank")]
-		public int GlobalRank { get; set; }
+		public int? GlobalRank { get; set; }
 		[Column("country_rank")]
-		public int CountryRank { get; set; }
+		public int? CountryRank { get; set; }
 		[Column("replay_popularity")]
 		public int ReplayCount { get; set; }
 		[Column("fail_count")]
 		public int FailCount { get; set; }
-		[Column("pass_count")]
-		public int PassCount { get; set; }
+		[Column("exit_count")]
+		public int ExitCount { get; set; }
 		[Column("max_combo")]
 		public int MaxCombo { get; set; }
 		[Column("last_played")]
 		public long LastPlayed { get; set; }
-		[Column("total_sconds_played")]
-		public int TotalPlayed { get; set; }
+		[Column("total_seconds_played")]
+		public int? TotalPlayed { get; set; }
 		[Column("score_best_count")]
 		public int ScoreBestCount { get; set; }
 	}
