@@ -10,6 +10,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{DC197273-696A-4CF4-8414-A7689AA271D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game", "osu\osu.Game\osu.Game.csproj", "{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Mania", "osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj", "{D4FC2792-9868-45D1-AF14-B547CE2BA550}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Catch", "osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj", "{016A8C40-BAC8-4DE7-9015-BA141C068D17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Osu", "osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj", "{2FE16A0C-465D-4845-BABD-EB4925995F36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Taiko", "osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj", "{C842A513-8FC4-4682-A16C-1309A3626E58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +32,36 @@ Global
 		{6A729D25-A334-4FA6-BDE0-8CB6CE381E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A729D25-A334-4FA6-BDE0-8CB6CE381E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A729D25-A334-4FA6-BDE0-8CB6CE381E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4FC2792-9868-45D1-AF14-B547CE2BA550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4FC2792-9868-45D1-AF14-B547CE2BA550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4FC2792-9868-45D1-AF14-B547CE2BA550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4FC2792-9868-45D1-AF14-B547CE2BA550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{016A8C40-BAC8-4DE7-9015-BA141C068D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016A8C40-BAC8-4DE7-9015-BA141C068D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016A8C40-BAC8-4DE7-9015-BA141C068D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016A8C40-BAC8-4DE7-9015-BA141C068D17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FE16A0C-465D-4845-BABD-EB4925995F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FE16A0C-465D-4845-BABD-EB4925995F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FE16A0C-465D-4845-BABD-EB4925995F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FE16A0C-465D-4845-BABD-EB4925995F36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C842A513-8FC4-4682-A16C-1309A3626E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C842A513-8FC4-4682-A16C-1309A3626E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C842A513-8FC4-4682-A16C-1309A3626E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C842A513-8FC4-4682-A16C-1309A3626E58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{145266E7-1B84-4CB0-BD88-57C1EB8A8AAF} = {DC197273-696A-4CF4-8414-A7689AA271D2}
+		{D4FC2792-9868-45D1-AF14-B547CE2BA550} = {DC197273-696A-4CF4-8414-A7689AA271D2}
+		{016A8C40-BAC8-4DE7-9015-BA141C068D17} = {DC197273-696A-4CF4-8414-A7689AA271D2}
+		{2FE16A0C-465D-4845-BABD-EB4925995F36} = {DC197273-696A-4CF4-8414-A7689AA271D2}
+		{C842A513-8FC4-4682-A16C-1309A3626E58} = {DC197273-696A-4CF4-8414-A7689AA271D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2420D1E-98F6-4470-BED5-7579EFC06232}
