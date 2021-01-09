@@ -16,6 +16,7 @@ namespace Sakamoto.Database
         }
 
         public DbSet<DBUser> Users { get; set; }
+        public DbSet<DBUserStat> UserStats { get; set; }
 
 
         // Oauth
