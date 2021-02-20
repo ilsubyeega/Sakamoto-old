@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Database.Models
 {
@@ -26,7 +22,7 @@ namespace Sakamoto.Database.Models
 		[Column("accuracy")]
 		public decimal Accuracy { get; set; }
 		[Column("playcount")]
-		public int PlayCount {	get; set; }
+		public int PlayCount { get; set; }
 		[Column("ranked_score")]
 		public long RankedScore { get; set; }
 		[Column("total_score")]

@@ -16,7 +16,7 @@ namespace Sakamoto.Controllers
 	public class RegisterController : ControllerBase
 	{
 		private readonly MariaDBContext _dbcontext;
-		public RegisterController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; } 
+		public RegisterController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
 
 		// POST /users
 		[HttpPost("users")]
@@ -65,7 +65,8 @@ namespace Sakamoto.Controllers
 				};
 				_dbcontext.Users.Add(dbuser);
 				await _dbcontext.SaveChangesAsync();
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				return StatusCode(422, new { error = "this is server side error, its error is logged and developer will investiage this issue." });
 			}
@@ -94,9 +95,9 @@ namespace Sakamoto.Controllers
 		}
 		private bool ValidatePassword(string name, string password, Dictionary<string, List<string>> error)
 		{
-			if (password.ToLower().Contains(name.ToLower())) 
+			if (password.ToLower().Contains(name.ToLower()))
 				return CreateError("password", "Password may not contain username.", error);
-			if (password.Length < 8) 
+			if (password.Length < 8)
 				return CreateError("password", "New password is too short.", error);
 			// todo check weak password
 			return true;

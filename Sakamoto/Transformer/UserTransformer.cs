@@ -1,11 +1,7 @@
-﻿using osu.Game.Online.API.Requests.Responses;
-using Sakamoto.Api;
+﻿using Sakamoto.Api;
 using Sakamoto.Database.Models;
-using Sakamoto.Util;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Transformer.ResponseTransformer
 {
@@ -97,7 +93,7 @@ namespace Sakamoto.Transformer.ResponseTransformer
 				Mode = "osu",
 				Data = Enumerable.Repeat(1, 3).ToArray()
 			};
-			
+
 		}
 		public static JsonUserStatistics ToUserStatistics(this DBUserStat stat)
 		{

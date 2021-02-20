@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Sakamoto.Database;
 using System;
@@ -150,7 +149,7 @@ namespace Sakamoto
 			{
 				endpoints.MapControllers();
 			});
-			
+
 		}
 	}
 }

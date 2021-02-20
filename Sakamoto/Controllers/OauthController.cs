@@ -5,7 +5,6 @@ using Sakamoto.Database;
 using Sakamoto.Database.Models.OAuth;
 using Sakamoto.Util;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
@@ -54,7 +53,7 @@ namespace Sakamoto.Controllers
 				{
 					return StatusCode(401, new { error = "Wrong Body." });
 				}
-				
+
 				var client = _dbcontext.Clients.FirstOrDefault(c => c.Id == client_id && c.Secret == client_secret && c.Revoked == false);
 				Console.WriteLine("A");
 				if (client == null) return StatusCode(401, new { error = "Client not found." });
@@ -69,7 +68,7 @@ namespace Sakamoto.Controllers
 						{
 							var refresh_token_tmp = GetValue(form, "refresh_token");
 							if (refresh_token_tmp is null) return StatusCode(401, new { error = "Wrong Body." });
-							
+
 							var handler = new JwtSecurityTokenHandler();
 							var tokens = handler.ReadJwtToken(refresh_token_tmp);
 
@@ -180,13 +179,14 @@ namespace Sakamoto.Controllers
 						return StatusCode(500, "No method found.");
 				}
 
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
 				Console.WriteLine(e.StackTrace);
 				return StatusCode(500, "Something Happened... Sent error logs to developer.");
 			}
-			
+
 			return Ok("owo!");
 		}
 
@@ -197,7 +197,8 @@ namespace Sakamoto.Controllers
 			{
 				while (_dbcontext.RefreshTokens.Any(a => a.Id == random))
 					random = JwtUtil.RandomString();
-			} else
+			}
+			else
 			{
 				while (_dbcontext.AccessTokens.Any(a => a.Id == random))
 					random = JwtUtil.RandomString();

@@ -1,10 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sakamoto.Util
 {
@@ -16,5 +10,5 @@ namespace Sakamoto.Util
 		}
 	}
 
-	
+
 }
