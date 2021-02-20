@@ -1,4 +1,5 @@
 ﻿using osu.Game.Online.API.Requests.Responses;
+using Sakamoto.Api;
 using Sakamoto.Database.Models;
 using Sakamoto.Util;
 using System;
@@ -10,88 +11,76 @@ namespace Sakamoto.Transformer.ResponseTransformer
 {
 	public static class UserTransformer
 	{
-		public static osu.Game.Users.User ToGameUser(this DBUser user, DBUserStat stat)
+		public static JsonUserCompact ToUserCompact(this DBUser user)
 		{
-			var fakearray = new int[3];
-			var random = new Random();
-			for (int i = 0; i < 3; i++)
-				fakearray[i] = random.Next();
-			var rankHistoryData = new osu.Game.Users.User.RankHistoryData
+			var compact = new JsonUserCompact();
+			MoveCompact(compact, user);
+			return compact;
+		}
+		private static void MoveCompact(JsonUserCompact jsonuser, DBUser user)
+		{
+			jsonuser.AvatarUrl = $"https://keesu.ilsubyeega.com/avatar/{user.Id}.png";
+			jsonuser.Country = new JsonCountry
 			{
-				Mode = "osu",
-				Data = fakearray
+				FlagName = "KR",
+				Display = null,
+				FullName = "South Korea"
 			};
-
-			var kudosuCount = new osu.Game.Users.User.KudosuCount
+			jsonuser.CountryCode = "KR";
+			jsonuser.Cover = new JsonCover
+			{
+				Url = "https://keesu.ilsubyeega.com/static/cover/1.png",
+				Id = "1"
+			};
+			jsonuser.CurrentModeRank = 0;
+			jsonuser.DefaultGroup = "default";
+			jsonuser.FollowerCount = 69;
+			jsonuser.Groups = null;
+			jsonuser.Id = user.Id;
+			jsonuser.IsActive = user.LastVisit + (60 * 60 * 30) > DateTimeOffset.Now.ToUnixTimeSeconds();
+			jsonuser.IsRestricted = false;
+			jsonuser.IsSilenced = false;
+			jsonuser.IsDeleted = false;
+			jsonuser.IsOnline = false;
+			jsonuser.IsSupporter = true;
+			jsonuser.LastVisit = user.LastVisit.HasValue ? DateTimeOffset.FromUnixTimeSeconds(user.LastVisit.Value).ToString("o") : DateTimeOffset.Now.ToString("o");
+			jsonuser.PmFriendsOnly = false;
+			jsonuser.ProfileColour = "fff";
+			jsonuser.SupporterLevel = 10;
+			jsonuser.Username = user.UserName;
+			jsonuser.PlayMode = (GameMode)user.PlayMode;
+		}
+		public static JsonUser ToUser(this DBUser user, DBUserStat stat)
+		{
+			var jsonuser = new JsonUser();
+			MoveCompact(jsonuser, user);
+			MoveUser(jsonuser, user);
+			jsonuser.Statistics = stat.ToUserStatistics();
+			return jsonuser;
+		}
+		private static void MoveUser(JsonUser jsonuser, DBUser user)
+		{
+			jsonuser.CommentCount = 0;
+			jsonuser.CoverUrl = jsonuser.Cover.CustomUrl ?? jsonuser.Cover.Url;
+			jsonuser.Discord = user.CustomDiscord;
+			jsonuser.HasSupported = user.HasSupported;
+			jsonuser.Interests = user.CustomInterest;
+			jsonuser.JoinDate = DateTimeOffset.FromUnixTimeSeconds(user.RegisterationDate.Value).ToString("o");
+			jsonuser.KudosuInfo = new JsonKudosuInfo
 			{
 				Total = 0,
 				Available = 0
 			};
-			
-			/*var userAchievement = new osu.Game.Users.User.UserAchievement
-			{
-
-			};*/
-			var userCover = new osu.Game.Users.User.UserCover
-			{
-				CustomUrl = null,
-				Url = "https://osu.ppy.sh/images/headers/profile-covers/c1.jpg",
-				Id = 1
+			jsonuser.Location = user.CustomLocations;
+			jsonuser.MaxBlocks = 25;
+			jsonuser.MaxFriends = 250;
+			jsonuser.Occupation = null;
+			jsonuser.PlayStyle = new string[] {
+				"keyboard"
 			};
-			/*var monthlyPlayCounts = new osu.Game.Users.User.UserHistoryCount
+			jsonuser.PostCount = 0;
+			jsonuser.ProfileOrder = new string[]
 			{
-				
-			};
-			var replaysWatchedCounts = new osu.Game.Users.User.UserHistoryCount
-			{
-
-			};*/
-			var gameUser = new APIExtend.APIUser
-			{
-				Id = user.Id,
-				JoinDate = new DateTimeOffset(TimeUtil.UnixTimeStampToDateTime(user.RegisterationDate.HasValue ? user.RegisterationDate.GetValueOrDefault() : 0)),
-				Username = user.UserName,
-				PreviousUsernames = new string[0],
-				Country = new osu.Game.Users.Country
-				{
-					FullName = "South Korea",
-					FlagName = "KR"
-				},
-				Colour = null,
-				AvatarUrl = "images/layout/avatar-guest.png",
-				CoverUrl = userCover.CustomUrl == null ? userCover.Url : userCover.CustomUrl,
-				Cover = userCover,
-				IsAdmin = false,
-				IsSupporter = user.SupporterLevel > 0,
-				IsGMT = false,
-				IsQAT = false,
-				IsBNG = false,
-				IsBot = false,
-				Active = false,
-				IsOnline = false,
-				PMFriendsOnly = user.IgnorePM,
-				Interests = user.CustomInterest,
-				Occupation = null,
-				Title = null,
-				Location = user.CustomLocations,
-				LastVisit = user.LastVisit != null ? new DateTimeOffset(TimeUtil.UnixTimeStampToDateTime(user.LastVisit.GetValueOrDefault())) : null,
-				Twitter = user.CustomTwitter,
-				Skype = user.CustomSkype,
-				Discord = user.CustomDiscord,
-				Website = user.CustomWebsite,
-				PostCount = 0,
-				FollowerCount = 0,
-				FavouriteBeatmapsetCount = 0,
-				GraveyardBeatmapsetCount = 0,
-				LovedBeatmapsetCount = 0,
-				RankedAndApprovedBeatmapsetCount = 0,
-				UnrankedBeatmapsetCount = 0,
-				ScoresFirstCount = user.ScoreFirstCount,
-				BeatmapPlaycountsCount = 0,
-				PlayStyles = new osu.Game.Users.User.PlayStyle[0],
-				PlayMode = "osu",
-				ProfileOrder = new string[]
-				{
 					"top_ranks",
 					"historical",
 					"recent_activity",
@@ -99,57 +88,50 @@ namespace Sakamoto.Transformer.ResponseTransformer
 					"beatmaps",
 					"kudosu",
 					"me"
-				},
-				Kudosu = kudosuCount,
-				Statistics = ToUserStatistics(stat),
-				Badges = new osu.Game.Users.Badge[0],
-				Achievements = new osu.Game.Users.User.UserAchievement[0],
-				MonthlyPlaycounts = new osu.Game.Users.User.UserHistoryCount[0],
-				ReplaysWatchedCounts = new osu.Game.Users.User.UserHistoryCount[0],
-				RankHistoryData = rankHistoryData
 			};
-			return gameUser;
-		}
-		public static osu.Game.Users.UserStatistics ToUserStatistics(this DBUserStat stat)
-		{
+			jsonuser.Skype = user.CustomSkype;
+			jsonuser.Twitter = user.CustomTwitter;
+			jsonuser.Website = user.CustomWebsite;
+			jsonuser.RankHistory = new JsonRankHistory
+			{
+				Mode = "osu",
+				Data = Enumerable.Repeat(1, 3).ToArray()
+			};
 			
-			var levelinfo = new osu.Game.Users.UserStatistics.LevelInfo
+		}
+		public static JsonUserStatistics ToUserStatistics(this DBUserStat stat)
+		{
+			var a = new JsonUserStatistics();
+			MoveStatics(a, stat);
+			return a;
+		}
+		private static void MoveStatics(JsonUserStatistics stat, DBUserStat db)
+		{
+			stat.Level = new JsonLevel
 			{
 				Current = 1,
 				Progress = 0
-			}; // todo
-
-			var ranks = new osu.Game.Users.UserStatistics.UserRanks
-			{
-				Global = stat.GlobalRank,
-				Country = stat.CountryRank
 			};
-
-			var gradescount = new osu.Game.Users.UserStatistics.Grades
+			stat.GlobalRank = 1;
+			stat.PP = 6974;
+			stat.PPRank = 1;
+			stat.RankedScore = 19721121;
+			stat.HitAccuracy = 69.74;
+			stat.PlayCount = 2021;
+			stat.PlayTime = 60 * 60 * 24 * 3 + 3600;
+			stat.TotalScore = 19721121;
+			stat.TotalHits = 1972;
+			stat.MaximumCombo = 1972;
+			stat.ReaplysWatchedByOthers = 0;
+			stat.IsRanked = true;
+			stat.Grades = new JsonGradeCounts
 			{
-				SSPlus = stat.XHCount,
-				SS = stat.SSCount,
-				SPlus = stat.SHCount,
-				S = stat.SCount,
-				A = stat.ACount
+				SSH = 0,
+				SS = 0,
+				SH = 0,
+				S = 0,
+				A = 0
 			};
-			var userstats = new APIExtend.APIUserStatistics
-			{
-				IsRanked = stat.GlobalRank != null ? true : false,
-				Level = levelinfo,
-				PP = stat.Performance,
-				Ranks = ranks,
-				RankedScore = stat.RankedScore,
-				Accuracy = stat.Accuracy,
-				PlayCount = stat.PlayCount,
-				PlayTime = stat.TotalPlayed,
-				TotalScore = stat.TotalScore,
-				TotalHits = stat.TotalHit,
-				MaxCombo = stat.MaxCombo,
-				ReplaysWatched = stat.ReplayCount,
-				GradesCount = gradescount,
-			};
-			return userstats;
 		}
 	}
 }

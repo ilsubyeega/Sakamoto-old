@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Database\Models\Legacy\" />
     <Folder Include="Transformer\ResponseTransformer\" />
   </ItemGroup>
 

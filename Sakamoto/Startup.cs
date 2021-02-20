@@ -80,13 +80,14 @@ namespace Sakamoto
 						var id = token.Claims.FirstOrDefault(claim => claim.Type == "token").Value;
 						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
 						var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-						var obj = dbcontext.AccessTokens.Any(ac => ac.Id == id && ac.Revoked == false && ac.ExpiresAt > timestamp);
-						if (!obj)
+						var obj = await dbcontext.AccessTokens.FirstOrDefaultAsync(ac => ac.Id == id && ac.Revoked == false && ac.ExpiresAt > timestamp);
+						if (obj == null)
 						{
 							context.Fail("auth failed");
 						}
 						else
 						{
+							context.HttpContext.Items["userId"] = obj.UserId;
 							context.Success();
 						}
 					},
@@ -126,10 +127,6 @@ namespace Sakamoto
 						.SetIsOriginAllowed((host) => true)
 						.AllowAnyHeader());
 			});
-			services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sakamoto", Version = "v1" });
-			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,8 +135,6 @@ namespace Sakamoto
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sakamoto"));
 			}
 
 			app.UseHttpsRedirection();

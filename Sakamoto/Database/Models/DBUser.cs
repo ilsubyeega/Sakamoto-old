@@ -34,9 +34,9 @@ namespace Sakamoto.Database.Models
 		[Column("user_ip")]
 		public string LastIP { get; set; }
 		[Column("user_lastvisit")]
-		public double? LastVisit { get; set; }
+		public long? LastVisit { get; set; }
 		[Column("user_regdate")]
-		public double? RegisterationDate { get; set; }
+		public long? RegisterationDate { get; set; }
 		[Column("user_pwweak")]
 		public bool IsPasswordWeak { get; set; }
 		[Column("user_last_confirm_key")]
