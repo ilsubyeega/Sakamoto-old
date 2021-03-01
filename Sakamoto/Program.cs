@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Sakamoto.Helper.Config;
 using static Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions;
 
 namespace Sakamoto
@@ -8,6 +9,9 @@ namespace Sakamoto
 	{
 		public static void Main(string[] args)
 		{
+			// Initial
+			ConfigParser.Parse();
+
 			CreateHostBuilder(args).Build().Run();
 		}
 

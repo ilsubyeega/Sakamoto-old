@@ -20,6 +20,16 @@ namespace Sakamoto.Util
 			}
 		}
 		public static string EncodeScrypt(string input) => _scryptEncoder.Encode(input);
-		public static bool CheckScrypt(string input, string hashed) => _scryptEncoder.Compare(input, hashed);
+		public static bool CheckScrypt(string input, string hashed)
+		{
+			try
+			{
+				return _scryptEncoder.Compare(input, hashed);
+			}
+			catch
+			{
+				return false;
+			}
+		}
 	}
 }

@@ -8,9 +8,9 @@ namespace Sakamoto.Database.Models.OAuth
 	{
 		[Key]
 		[Column("id")]
-		public long Id { get; set; }
+		public int Id { get; set; }
 		[Column("user_id")]
-		public long? UserId { get; set; }
+		public int? UserId { get; set; }
 		[Column("name")]
 		public string Name { get; set; }
 		[Column("secret")]

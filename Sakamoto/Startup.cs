@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Sakamoto.Database;
+using Sakamoto.Helper.Config;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -30,8 +31,8 @@ namespace Sakamoto
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-
-			services.AddControllers();
+			
+			services.AddControllers().AddNewtonsoftJson();
 			services.AddLogging(l =>
 			{
 				l.ClearProviders();
@@ -43,7 +44,7 @@ namespace Sakamoto
 			services.AddDbContext<MariaDBContext>(
 				options =>
 				{
-					options.UseMySql("server=localhost;port=3306;database=keesu;uid=dev;password=dev", MariaDbServerVersion.LatestSupportedServerVersion,
+					options.UseMySql(ConfigParser.Config.Database.Url, MariaDbServerVersion.LatestSupportedServerVersion,
 					   mySqlOptionsAction: sqlOptions =>
 					   {
 						   sqlOptions.EnableRetryOnFailure(
@@ -74,7 +75,6 @@ namespace Sakamoto
 				{
 					OnTokenValidated = async context =>
 					{
-						Console.WriteLine("Log");
 						var token = (JwtSecurityToken)context.SecurityToken;
 						var id = token.Claims.FirstOrDefault(claim => claim.Type == "token").Value;
 						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
@@ -83,6 +83,7 @@ namespace Sakamoto
 						if (obj == null)
 						{
 							context.Fail("auth failed");
+							context.HttpContext.Response.StatusCode = 401;
 						}
 						else
 						{
@@ -92,7 +93,6 @@ namespace Sakamoto
 					},
 					OnAuthenticationFailed = async context =>
 					{
-						Console.WriteLine("fail fail uwu");
 						context.Response.Clear();
 						context.Response.StatusCode = 401;
 						var res = JsonConvert.SerializeObject(new { auth = "auth failed" });

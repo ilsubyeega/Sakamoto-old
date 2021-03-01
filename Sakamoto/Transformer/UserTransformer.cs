@@ -1,5 +1,6 @@
 ﻿using Sakamoto.Api;
 using Sakamoto.Database.Models;
+using Sakamoto.Enums;
 using System;
 using System.Linq;
 
@@ -45,6 +46,7 @@ namespace Sakamoto.Transformer.ResponseTransformer
 			jsonuser.SupporterLevel = 10;
 			jsonuser.Username = user.UserName;
 			jsonuser.PlayMode = (GameMode)user.PlayMode;
+			jsonuser.ProfileColour = user.Color;
 		}
 		public static JsonUser ToUser(this DBUser user, DBUserStat stat)
 		{

@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Runtime.Serialization;
 
 namespace Sakamoto.Api
@@ -39,17 +41,7 @@ namespace Sakamoto.Api
 		[JsonProperty("short_name")]
 		public string ShortName;
 	}
-	public enum GameMode
-	{
-		[EnumMember(Value = "osu")]
-		osu,
-		[EnumMember(Value = "taiko")]
-		taiko,
-		[EnumMember(Value = "fruits")]
-		fruits,
-		[EnumMember(Value = "mania")]
-		mania
-	}
+	
 	public class JsonBeatmapFailTimesArray
 	{
 		[JsonProperty("exit")]
@@ -57,56 +49,8 @@ namespace Sakamoto.Api
 		[JsonProperty("fail")]
 		public int[] Fails;
 	}
-	public class JsonGenre
-	{
-		[JsonProperty("id")]
-		public int? Id;
-		[JsonProperty("name")]
-		public string Name;
-	}
-	public class JsonLanguage
-	{
-		[JsonProperty("id")]
-		public int? Id;
-		[JsonProperty("name")]
-		public string Name;
-	}
-	public enum Rank
-	{
-		[EnumMember(Value = "A")]
-		A,
-		[EnumMember(Value = "B")]
-		B,
-		[EnumMember(Value = "C")]
-		C,
-		[EnumMember(Value = "D")]
-		D,
-		[EnumMember(Value = "S")]
-		S,
-		[EnumMember(Value = "SH")]
-		SH,
-		[EnumMember(Value = "X")]
-		X,
-		[EnumMember(Value = "XH")]
-		XH,
-	}
-	public enum BeatmapStatus
-	{
-		[EnumMember(Value = "graveyard")]
-		Graveyard,
-		[EnumMember(Value = "wip")]
-		WIP,
-		[EnumMember(Value = "pending")]
-		Pending,
-		[EnumMember(Value = "ranked")]
-		Ranked,
-		[EnumMember(Value = "approved")]
-		Approved,
-		[EnumMember(Value = "qualified")]
-		Qualified,
-		[EnumMember(Value = "loved")]
-		Loved,
-	}
+	
+	
 	public class JsonBeatmapsetCovers
 	{
 		[JsonProperty("card")]
@@ -121,16 +65,16 @@ namespace Sakamoto.Api
 	public class JsonDownloadAvaility
 	{
 		[JsonProperty("download_disabled")]
-		public bool DownloadDisabled;
+		public bool DownloadDisabled = false;
 		[JsonProperty("more_information")]
-		public string MoreInformation;
+		public string MoreInformation = null;
 	}
 	public class JsonNominationSummaryMeta
 	{
 		[JsonProperty("current")]
-		public string Current;
+		public int Current = 0;
 		[JsonProperty("required")]
-		public string Required;
+		public int Required = 2;
 	}
 	public class JsonKudosuInfo
 	{
@@ -153,5 +97,76 @@ namespace Sakamoto.Api
 		public string Mode;
 		[JsonProperty("data")]
 		public int[] Data;
+	}
+	public class JsonBeatmapCovers
+	{
+		[JsonProperty("card")]
+		public string Card;
+		[JsonProperty("card@2x")]
+		public string Card2x;
+		[JsonProperty("cover")]
+		public string Cover;
+		[JsonProperty("cover@2x")]
+		public string Cover2x;
+		[JsonProperty("list")]
+		public string List;
+		[JsonProperty("list@2x")]
+		public string List2x;
+		[JsonProperty("slimcover")]
+		public string SlimCover;
+		[JsonProperty("slimcover@2x")]
+		public string SlimCover2x;
+		public JsonBeatmapCovers SetValue(int beatmapset_id)
+		{
+			var randomnumber = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+			Card = coverUrl(beatmapset_id, "card", randomnumber);
+			Card2x = coverUrl(beatmapset_id, "card@2x", randomnumber);
+			Cover = coverUrl(beatmapset_id, "cover", randomnumber);
+			Cover2x = coverUrl(beatmapset_id, "cover@2x", randomnumber);
+			List = coverUrl(beatmapset_id, "list", randomnumber);
+			List2x = coverUrl(beatmapset_id, "list@2x", randomnumber);
+			SlimCover = coverUrl(beatmapset_id, "slimcover", randomnumber);
+			SlimCover2x = coverUrl(beatmapset_id, "slimcover@2x", randomnumber);
+			return this;
+		}
+		private static string coverUrl(int id, string key, string query) => $"https://assets.ppy.sh/beatmaps/{id}/covers/{key}.jpg{(query == null ? "" : "?"+query)}";
+	}
+	public class JsonHype
+	{
+		[JsonProperty("current")]
+		public int Current = 0;
+		[JsonProperty("required")]
+		public int Required = 5;
+	}
+	public class JsonCurrentUserAttributes
+	{
+		[JsonProperty("can_delete")]
+		public bool CanDelete;
+		[JsonProperty("can_edit_metadata")]
+		public bool CanEditMetadata;
+		[JsonProperty("can_hype")]
+		public bool CanHype;
+		[JsonProperty("can_remove_from_loved")]
+		public bool CanRemoveFromLoved;
+		[JsonProperty("is_watching")]
+		public bool IsWatching;
+		[JsonProperty("new_hype_time")]
+		public int NewHypeTime;
+		[JsonProperty("nomination_modes")]
+		public int NominationModes; // no idea
+		[JsonProperty("remaining_hype")]
+		public int RemainingHype;
+	}
+	public class JsonIdName
+	{
+		[JsonProperty("id")]
+		public int? Id;
+		[JsonProperty("name")]
+		public string Name;
+	}
+	public class JsonDescription
+	{
+		[JsonProperty("description")]
+		public string Text;
 	}
 }

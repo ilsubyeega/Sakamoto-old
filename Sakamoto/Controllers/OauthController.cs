@@ -55,7 +55,6 @@ namespace Sakamoto.Controllers
 				}
 
 				var client = _dbcontext.Clients.FirstOrDefault(c => c.Id == client_id && c.Secret == client_secret && c.Revoked == false);
-				Console.WriteLine("A");
 				if (client == null) return StatusCode(401, new { error = "Client not found." });
 
 				switch (grant_type)
@@ -186,8 +185,6 @@ namespace Sakamoto.Controllers
 				Console.WriteLine(e.StackTrace);
 				return StatusCode(500, "Something Happened... Sent error logs to developer.");
 			}
-
-			return Ok("owo!");
 		}
 
 		private string GenerateRandomUntilNotExists(bool isRefresh)

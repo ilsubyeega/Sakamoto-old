@@ -54,7 +54,7 @@ namespace Sakamoto.Database.Models
 		[Column("user_playmode")]
 		public byte PlayMode { get; set; }
 		[Column("user_color")]
-		public byte? PageColor { get; set; }
+		public string Color { get; set; }
 		[Column("osu_id")]
 		public long? OsuId { get; set; }
 

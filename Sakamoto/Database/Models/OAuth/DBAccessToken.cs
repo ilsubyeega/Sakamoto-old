@@ -8,7 +8,7 @@ namespace Sakamoto.Database.Models.OAuth
 		[Column("id")]
 		public string Id { get; set; }
 		[Column("user_id")]
-		public long? UserId { get; set; }
+		public int? UserId { get; set; }
 		[Column("client_id")]
 		public long ClientId { get; set; }
 		[Column("scopes")]

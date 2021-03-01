@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Sakamoto.Enums;
 
 namespace Sakamoto.Api
 {
@@ -23,23 +24,23 @@ namespace Sakamoto.Api
 		[JsonProperty("id")]
 		public int Id;
 		[JsonProperty("is_active")]
-		public bool IsActive;
+		public bool IsActive = false;
 		[JsonProperty("is_restricted")]
-		public bool IsRestricted;
+		public bool IsRestricted = false;
 		[JsonProperty("is_silenced")]
-		public bool IsSilenced;
+		public bool IsSilenced = false;
 		[JsonProperty("is_deleted")]
-		public bool IsDeleted;
+		public bool IsDeleted = false;
 		[JsonProperty("is_online")]
-		public bool IsOnline;
+		public bool IsOnline = false;
 		[JsonProperty("is_supporter")]
-		public bool IsSupporter;
+		public bool IsSupporter = false;
 		[JsonProperty("last_visit")]
-		public string LastVisit;
+		public string LastVisit = null;
 		[JsonProperty("pm_friends_only")]
-		public bool PmFriendsOnly;
+		public bool PmFriendsOnly = false;
 		[JsonProperty("profile_colour")]
-		public string ProfileColour;
+		public string ProfileColour = null;
 		[JsonProperty("support_level", NullValueHandling = NullValueHandling.Ignore)]
 		public int? SupporterLevel;
 		[JsonProperty("username")]
@@ -89,13 +90,23 @@ namespace Sakamoto.Api
 		[JsonProperty("website")]
 		public string Website;
 
-		/*[JsonProperty("")]
+		[JsonProperty("favourite_beatmapset_count")]
+		public int FavouriteBeatmapsetCount = 0;
 		[JsonProperty("loved_beatmapset_count")]
+		public int LovedBeatmapsetCount = 0;
+		[JsonProperty("ranked_and_approved_beatmapset_count")]
+		public int RankedApprovedMapsetCount = 0;
+		[JsonProperty("unranked_beatmapset_count")]
+		public int PendingMapsetCount = 0;
+		[JsonProperty("graveyard_beatmapset_count")]
+		public int GraveyardMapsetCount = 0;
 		[JsonProperty("mapping_follower_count")]
+		public int MapFollowers = 0;
+
+		/*[JsonProperty("")]
 		[JsonProperty("monthly_playcounts")]
 		[JsonProperty("page")]
 		[JsonProperty("previous_usernames")]
-		[JsonProperty("ranked_and_approved_beatmapset_count")]
 		[JsonProperty("replays_watched_counts")]
 		[JsonProperty("score_best_count")]
 		[JsonProperty("score_first_count")]
@@ -103,7 +114,6 @@ namespace Sakamoto.Api
 		
 		[JsonProperty("statistics_rulesets")]
 		[JsonProperty("support_level")]
-		[JsonProperty("unranked_beatmapset_count")]
 		[JsonProperty("unread_pm_count")]
 		[JsonProperty("rankHistory")]
 		public JsonRankHistory RankHistoryFallback;*/
