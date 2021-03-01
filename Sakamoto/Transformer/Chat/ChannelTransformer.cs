@@ -1,5 +1,6 @@
 ﻿using Sakamoto.Api;
 using Sakamoto.Api.Chat;
+using Sakamoto.Database;
 using Sakamoto.Database.Models.Chat;
 using Sakamoto.Enums.Chat;
 using System;
@@ -30,14 +31,31 @@ namespace Sakamoto.Transformer.Chat
 			channel.LastReadId = db.LastReadId;
 			return channel;
 		}
-		public static JsonChannel IncludeMessages(this JsonChannel channel, DBMessage[] messages)
+		public static JsonChannel IncludeMessages(this JsonChannel channel, DBMessage[] messages, MariaDBContext ctx = null)
 		{
 			if (messages == null) return channel;
-			var lastmessage = messages[messages.Length-1];
-			channel.LastMessageId = lastmessage.MessageId;
+			if (messages.Length > 0)
+			{
+				var lastmessage = messages[messages.Length - 1];
+				channel.LastMessageId = lastmessage.MessageId;
+			}
+			else
+				channel.LastMessageId = 0;
+			
 			var messagelist = new List<JsonMessage>();
 			foreach (var a in messages)
-				messagelist.Add(a.ToJsonMessage());
+			{
+				var jsmg = a.ToJsonMessage();
+				if (ctx != null)
+				{
+					var us = ctx.Users.FirstOrDefault(u => u.Id == a.UserId);
+					if (us != null)
+						jsmg.IncludeSender(us);
+				}
+				messagelist.Add(jsmg);
+			}
+				
+			channel.RecentMessages = messagelist.ToArray();
 			return channel;
 		}
 		public static JsonChannel IncludeUsers(this JsonChannel channel, int[] users)

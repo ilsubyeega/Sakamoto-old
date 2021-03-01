@@ -6,6 +6,7 @@ using Sakamoto.Api;
 using Sakamoto.Api.Chat;
 using Sakamoto.Database;
 using Sakamoto.Database.Models.Chat;
+using Sakamoto.Enums.Chat;
 using Sakamoto.Transformer.Chat;
 using Sakamoto.Util;
 using System;
@@ -58,7 +59,42 @@ namespace Sakamoto.Controllers.Chat
 			await _dbcontext.SaveChangesAsync();
 			return StatusCode(200, dbmsg.ToJsonMessage().IncludeSender(qu));
 		}
+		[HttpPost("chat/new")]
+		public async Task<IActionResult> SendMessagePrivate([FromForm] int target_id, [FromForm] string message, [FromForm] bool is_action = false)
+		{
+			if (message == null) return StatusCode(402, "Message cannot be null.");
+			var userid = (int)HttpContext.Items["userId"];
+			var qq = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => (a.UserId1 == target_id && a.UserId2 == userid) 
+			|| (a.UserId1 == userid && a.UserId2 == target_id));
+			if (qq == null) return StatusCode(404, "channel not found. should create this");
+			var q = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == qq.ChannelId);
+			var qu = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == userid);
+			if (q == null) return StatusCode(404, "Channel not found");
+			var dbmsg = new DBMessage
+			{
+				UserId = userid,
+				ChannelId = q.ChannelId,
+				Content = message,
+				IsAction = is_action,
+				Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
+			};
+			_dbcontext.Messages.Add(dbmsg);
 
+			await _dbcontext.SaveChangesAsync();
+
+			var uc = _dbcontext.UserChannels.FirstOrDefault(a => a.UserId == target_id && a.ChannelId == q.ChannelId);
+			if (uc == null)
+			{
+				_dbcontext.UserChannels.Add(new DBUserChannel
+				{
+					UserId = target_id,
+					ChannelId = q.ChannelId,
+					LastReadId = dbmsg.MessageId
+				});
+				await _dbcontext.SaveChangesAsync();
+			}
+			return StatusCode(200, dbmsg.ToJsonMessage().IncludeSender(qu));
+		}
 		[HttpGet("chat/updates")]
 		public async Task<IActionResult> GetUpdates(int since, int channel_id = -1, int limit = 50)
 		{
@@ -79,11 +115,21 @@ namespace Sakamoto.Controllers.Chat
 			var jsonmessage = new List<JsonMessage>();
 
 			foreach (var a in channels)
-				jsonpresences.Add(a.ToJsonChannel());
+			{
+				var jsc = a.ToJsonChannel();
+				if (jsc.Type == ChannelType.PM)
+				{
+					var pm = _dbcontext.PMChannels.FirstOrDefault(v => v.ChannelId == a.ChannelId);
+					if (pm == null) continue;
+					jsc.IncludeUsers(new int[] { pm.UserId1, pm.UserId2 });
+				}
+				jsonpresences.Add(jsc);
+			}
+				
 
 			foreach (var a in messages)
 			{
-				var user = _dbcontext.Users.FirstOrDefault(a => a.Id == a.Id);
+				var user = _dbcontext.Users.FirstOrDefault(b => b.Id == a.UserId);
 				var m = a.ToJsonMessage();
 				if (user != null) m.IncludeSender(user);
 				jsonmessage.Add(m);

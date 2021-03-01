@@ -33,11 +33,21 @@ namespace Sakamoto.Controllers.Chat
 			var channels = _dbcontext.Channels.Where(a => a.Type == (int)ChannelType.PUBLIC);
 			var list = new List<JsonChannel>();
 			foreach (var a in channels)
-				list.Add(a.ToJsonChannel());
+			{
+				var json = a.ToJsonChannel();
+				if (json.Type == ChannelType.PM)
+				{
+					var pm = _dbcontext.PMChannels.FirstOrDefault(v => v.ChannelId == a.ChannelId);
+					if (pm == null) continue;
+					json.IncludeUsers(new int[] { pm.UserId1, pm.UserId2 });
+				}	
+				list.Add(json);
+			}
+				
 			return StatusCode(200, list);
 		}
 		[HttpPost("chat/channels")]
-		public async Task<IActionResult> CreateChannel(string type, int? target_id = null)
+		public async Task<IActionResult> CreateChannel([FromForm] string type, [FromForm] int? target_id = null)
 		{
 			if (target_id == null) return StatusCode(422, "Targetid not provided.");
 
@@ -65,6 +75,8 @@ namespace Sakamoto.Controllers.Chat
 					UserId1 = userid,
 					UserId2 = target_id.Value
 				};
+				_dbcontext.PMChannels.Add(p);
+				await _dbcontext.SaveChangesAsync();
 				chan = c;
 				channel = p;
 			}
@@ -73,7 +85,7 @@ namespace Sakamoto.Controllers.Chat
 				chan = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == channel.ChannelId);
 				if (chan == null) return StatusCode(404, "Channel not found (its a bug, report this to developer)");
 			}
-			var userchannel = await _dbcontext.UserChannels.FirstOrDefaultAsync(a => a.ChannelId == chan.ChannelId);
+			var userchannel = await _dbcontext.UserChannels.FirstOrDefaultAsync(a => a.ChannelId == chan.ChannelId && a.UserId == userid);
 			if (userchannel == null)
 			{
 				var uc = new DBUserChannel
@@ -87,10 +99,10 @@ namespace Sakamoto.Controllers.Chat
 			}
 			var messages = _dbcontext.Messages.Where(a => a.ChannelId == chan.ChannelId).OrderByDescending(a => a.Timestamp).Take(50);
 			messages = messages.OrderBy(a => a.Timestamp);
-
 			var jsonchannel = chan.ToJsonChannel();
 			jsonchannel.SetLastRead(0);
-			jsonchannel.IncludeMessages(messages.ToArray());
+			jsonchannel.IncludeMessages(messages.ToArray(), _dbcontext);
+			jsonchannel.IncludeUsers(new int[] { userid, target_id.Value });
 			return StatusCode(200, jsonchannel);
 		}
 		[HttpPut("chat/channels/{channelid}/users/{userid}")]
