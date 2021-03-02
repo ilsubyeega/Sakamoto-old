@@ -68,6 +68,9 @@ namespace Sakamoto.Controllers
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("Error while registerating the user.");
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
 				return StatusCode(422, new { error = "this is server side error, its error is logged and developer will investiage this issue." });
 			}
 			return StatusCode(200, new { result = "ok" });
