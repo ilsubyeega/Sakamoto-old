@@ -34,6 +34,7 @@ namespace Sakamoto.Helper.Config
 		{
 			var value = File.ReadAllText(path);
 			var config = JsonConvert.DeserializeObject<Config>(value);
+			File.WriteAllText(path, JsonConvert.SerializeObject(config, Formatting.Indented));
 			Config = config;
 		}
 		public static void CreateConfig(string path)
