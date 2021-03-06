@@ -14,6 +14,8 @@ namespace Sakamoto.Helper.Config
 		public OsuConfig Osu = new OsuConfig();
 		[JsonProperty("log")]
 		public LogConfig Log = new LogConfig();
+		[JsonProperty("directory")]
+		public DirectoryConfig Directory = new DirectoryConfig();
 		[JsonProperty("direct")]
 		public DirectConfig Direct = new DirectConfig();
 	}
@@ -42,5 +44,12 @@ namespace Sakamoto.Helper.Config
 	{
 		[JsonProperty("beatconnect_key")]
 		public string BeatconnectKey = "";
+	}
+	public class DirectoryConfig
+	{
+		[JsonProperty("beatmap")]
+		public string Beatmap = "";
+		[JsonProperty("replay")]
+		public string Replay = "";
 	}
 }
