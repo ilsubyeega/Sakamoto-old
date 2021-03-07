@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using osu.Game.IO.Legacy;
 using osu.Game.Rulesets.Scoring;
 using Sakamoto.Database;
+using Sakamoto.Helper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,6 +66,13 @@ namespace Sakamoto.Controllers.Submission
 			}
 
 			var beatmap = _dbcontext.Beatmaps.FirstOrDefault(a => a.BeatmapId == beatmapid);
+			if (beatmap == null)
+			{
+				await BeatmapSeeder.SeedSetFromBeatmap(beatmapid, false, _dbcontext);
+				beatmap = _dbcontext.Beatmaps.FirstOrDefault(a => a.BeatmapId == beatmapid);
+			}
+
+
 			var beatmapset = _dbcontext.BeatmapSets.FirstOrDefault(a => a.BeatmapsetId == beatmapsetid);
 			if (beatmap == null || beatmapset == null) return StatusCode(200);
 			Console.WriteLine($"[NEW SCORE] Ruleset: {rulesetshort} ({rulesetid})");
