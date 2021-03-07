@@ -83,7 +83,6 @@ namespace Sakamoto
 						if (obj == null)
 						{
 							context.Fail("auth failed");
-							context.HttpContext.Response.StatusCode = 401;
 						}
 						else
 						{
@@ -93,10 +92,20 @@ namespace Sakamoto
 					},
 					OnAuthenticationFailed = async context =>
 					{
-						context.Response.Clear();
-						context.Response.StatusCode = 401;
-						var res = JsonConvert.SerializeObject(new { auth = "auth failed" });
-						await context.Response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(res));
+						context.Response.OnStarting(async () =>
+						{
+							context.Response.StatusCode = 401;
+							context.Response.ContentType = "text/plain";
+							var res = JsonConvert.SerializeObject(
+								new {
+									auth = "auth failed",
+									exception = new
+									{
+										message = context.Exception.Message
+									}
+								});
+							await context.Response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(res));
+						});
 					}
 				};
 
