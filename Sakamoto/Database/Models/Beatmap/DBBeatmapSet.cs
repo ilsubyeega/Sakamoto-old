@@ -71,5 +71,6 @@ namespace Sakamoto.Database.Models.Beatmap
 		public bool ShouldRefresh { get; set; }
 		[Column("user")]
 		public int? User { get; set; }
+		public virtual List<DBBeatmap> Beatmaps { get; set; }
 	}
 }

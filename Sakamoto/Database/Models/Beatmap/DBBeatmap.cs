@@ -55,5 +55,6 @@ namespace Sakamoto.Database.Models.Beatmap
 		public Byte PlayMode { get; set; }
 		[Column("updated_date")]
 		public long UpdatedDate { get; set; }
+		public virtual DBBeatmapSet BeatmapSet { get; set; }
 	}
 }

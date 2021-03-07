@@ -56,7 +56,11 @@ namespace Sakamoto.Database
 				table.UserId
 			});
 			builder.Entity<DBBeatmapsetFavourite>().Property(p => p.FavouritedAt);
-			
+
+			builder.Entity<DBBeatmap>()
+				.HasOne(a => a.BeatmapSet)
+				.WithMany(b => b.Beatmaps);
+
 		}
 
 	}
