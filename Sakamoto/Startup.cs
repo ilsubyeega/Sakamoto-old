@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Sakamoto.Database;
+using Sakamoto.Database.Models;
 using Sakamoto.Helper.Config;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -80,13 +81,16 @@ namespace Sakamoto
 						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
 						var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 						var obj = await dbcontext.AccessTokens.FirstOrDefaultAsync(ac => ac.Id == id && ac.Revoked == false && ac.ExpiresAt > timestamp);
-						if (obj == null)
+						DBUser user = null;
+						if (obj != null) user = dbcontext.Users.Where(a => a.Id == obj.UserId).FirstOrDefault();
+						if (obj == null || user == null)
 						{
 							context.Fail("auth failed");
 						}
 						else
 						{
 							context.HttpContext.Items["userId"] = obj.UserId;
+							context.HttpContext.Items["user"] = user;
 							context.Success();
 						}
 					},

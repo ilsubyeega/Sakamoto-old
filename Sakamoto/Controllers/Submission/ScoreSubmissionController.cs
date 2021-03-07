@@ -16,14 +16,14 @@ namespace Sakamoto.Controllers.Submission
 	[ApiController]
 	[Route("api/v2/")]
 	[Authorize]
-	public class ScoreSubmissionController : ControllerBase
+	public class ScoreSubmissionController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public ScoreSubmissionController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
 
 		[HttpPost("scores/_submit")]
 		public async Task<IActionResult> SubmitScore
-			(
+		(
 			[FromForm(Name = "ruleset[id]")] int rulesetid,
 			[FromForm(Name = "ruleset[short]")] string rulesetshort,
 			[FromForm(Name = "beatmap[id]")] int beatmapid,
@@ -36,7 +36,7 @@ namespace Sakamoto.Controllers.Submission
 			[FromForm(Name = "score[total]")] long totalscore,
 			[FromForm(Name = "score[hitresults]")] IFormFile scorehitresults,
 			[FromForm(Name = "score[replay]")] IFormFile replay
-			)
+		)
 		{
 			if (scorehitresults == null || replay == null || scorehitresults.Length == 0 || replay.Length == 0)
 				return StatusCode(401, "Hitresult or replay is null");
