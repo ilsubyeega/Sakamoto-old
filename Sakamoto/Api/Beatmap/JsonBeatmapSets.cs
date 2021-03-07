@@ -39,7 +39,7 @@ namespace Sakamoto.Api
 		[JsonProperty("creator")]
 		public string Creator;
 		[JsonProperty("user_id")]
-		public int UserId;
+		public int? UserId;
 		[JsonProperty("video")]
 		public bool HasVideo;
 
