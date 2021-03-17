@@ -87,11 +87,7 @@ namespace Sakamoto.Controllers.Search
 			if (languageid != 0 && Enum.IsDefined(typeof(BeatmapLanguage), languageid))
 				q = q.Where(a => a.LanguageId == languageid);
 
-
 			q = q.Where(a => a.IsNsfw == nsfw);
-
-
-
 
 
 			var fulltextquery = FulltextUtil.ToQuery(query);
@@ -115,11 +111,16 @@ namespace Sakamoto.Controllers.Search
 			}
 
 			var splittedsort = sorttext.Split("_", StringSplitOptions.RemoveEmptyEntries);
+
+			BeatmapSortCriteria sortable = BeatmapSortCriteria.Relevance;
+			bool isasc = false;
+
 			if (splittedsort.Length == 2 && (splittedsort[1] == "asc" || splittedsort[1] == "desc")
 				&& Enum.TryParse(typeof(BeatmapSortCriteria), splittedsort[0], true, out object? sortobj))
 			{
-				var isasc = splittedsort[1] == "asc"; // true: asc, false: desc
-				switch ((BeatmapSortCriteria)sortobj)
+				isasc = splittedsort[1] == "asc"; // true: asc, false: desc
+				sortable = (BeatmapSortCriteria)sortobj;
+				switch (sortable)
 				{
 					default:
 					case BeatmapSortCriteria.Relevance:
@@ -163,6 +164,7 @@ namespace Sakamoto.Controllers.Search
 				k.Beatmaps = bblist.ToArray();
 				blist.Add(k);
 			}
+			var sortstring = isasc ? "asc" : "desc" ;
 			var result = new
 			{
 				beatmapsets = blist,
@@ -171,6 +173,9 @@ namespace Sakamoto.Controllers.Search
 					current = offset,
 					next = offset + 50,
 					limit = 50
+				},
+				search = new {
+					sort = $"{sortable.ToString().ToLower()}_{sortstring}"
 				},
 				recommended_difficulty = 7,
 				total = blist.Count()
