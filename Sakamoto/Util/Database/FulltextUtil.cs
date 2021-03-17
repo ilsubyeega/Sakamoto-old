@@ -17,9 +17,17 @@ namespace Sakamoto.Util.Database
 		public static string ToQuery(string from)
 		{
 			if (from == null) return null;
+
+			var splitted = from.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+			if (splitted.Length == 1)
+				return "*" + String.Join("", splitted[0].Split(spliitable, StringSplitOptions.TrimEntries)) + "*";
+
 			string q2 = "";
-			foreach (var q3 in from.Split(" ", StringSplitOptions.RemoveEmptyEntries))
+
+			foreach (var q3 in splitted)
 				if (q3.Length > 1 || String.Join("", q3.Split(" ")).Length > 1) q2 += " *" + String.Join("", q3.Split(spliitable, StringSplitOptions.TrimEntries));
+
 			return $"*{q2}*";
 		}
 	}
