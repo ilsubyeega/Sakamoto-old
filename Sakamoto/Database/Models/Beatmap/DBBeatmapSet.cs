@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Sakamoto.Database.Models.Beatmap
 {
 	[Table("beatmapsets")]
-	public class DBBeatmapSet
+	public class DBBeatmapSet : DBModel
 	{
 		[Column("beatmapset_id")]
 		[Key]
