@@ -85,7 +85,7 @@ namespace Sakamoto.Controllers.Search
 			if (genreid != 0 && Enum.IsDefined(typeof(BeatmapGenre), genreid))
 				q = q.Where(a => a.GenreId == genreid);
 			if (languageid != 0 && Enum.IsDefined(typeof(BeatmapLanguage), languageid))
-				q = q.Where(a => a.LanguageId == languageid);
+				q = q.Where(a => (int)a["LanguageId"] == languageid);
 
 			q = q.Where(a => a.IsNsfw == nsfw);
 
@@ -151,7 +151,14 @@ namespace Sakamoto.Controllers.Search
 				}
 			}
 
-			list = q.Skip(offset).Take(limit > 100 ? 50 : limit).ToArray();
+			q = q.Skip(offset).Take(limit > 100 ? 50 : limit);
+			q = q.Include(a => a.Beatmaps);
+			ParseAdvancedQuery(ref q, query);
+			
+			list = q.ToArray();
+
+
+
 
 			var blist = new List<JsonBeatmapSet>();
 			foreach (var a in list)
@@ -181,6 +188,136 @@ namespace Sakamoto.Controllers.Search
 				total = blist.Count()
 			};
 			return StatusCode(200, result);
+		}
+		// returns query that replaced advanced query with blank
+		private string ParseAdvancedQuery(ref IQueryable<DBBeatmapSet> q, string query)
+		{
+			var fixedquery = "";
+			var splitted1 = query.Split(" ");
+			foreach (var _a in splitted1)
+			{
+				if (matchable.Any(a => _a.Contains(a)))
+				{
+					fixedquery = fixedquery.Replace(_a, "");
+					
+				}
+			}
+
+			return fixedquery;
+		}
+		private IQueryable<DBBeatmapSet> AddAdvancedQuery(IQueryable<DBBeatmapSet> q, (string, string, string, bool, bool) keymatch, object value, string match)
+		{
+			var key = keymatch.Item1;
+			var dbkey = keymatch.Item2;
+			var _type = keymatch.Item3;
+			var unsigned = keymatch.Item4;
+			var fromset = keymatch.Item5;
+
+			if (key == "length")
+				value = ParseLength((string)value);
+
+			switch (keymatch.Item3)
+			{
+				case "float":
+					switch (_type)
+					{
+						case "<":
+							return fromset ? q.Where(a => (float)a[dbkey] < (float)value) : q.Where(a => a.Beatmaps.Any(b => (float)b[dbkey] < (float)value));
+
+						case "<:":
+						case "<=":
+							return fromset ? q.Where(a => (float)a[dbkey] <= (float)value) : q.Where(a => a.Beatmaps.Any(b => (float)b[dbkey] <= (float)value));
+
+						case ">":
+							return fromset ? q.Where(a => (float)a[dbkey] > (float)value) : q.Where(a => a.Beatmaps.Any(b => (float)b[dbkey] > (float)value));
+
+						case ">:":
+						case ">=":
+							return fromset ? q.Where(a => (float)a[dbkey] >= (float)value) : q.Where(a => a.Beatmaps.Any(b => (float)b[dbkey] >= (float)value));
+
+						case "=":
+						case ":":
+							return fromset ? q.Where(a => (float)a[dbkey] == (float)value) : q.Where(a => a.Beatmaps.Any(b => (float)b[dbkey] == (float)value));
+
+						default: throw new Exception("invalid logic");
+					}
+
+				case "int":
+					switch (_type)
+					{
+						case "<":
+							return fromset ? q.Where(a => (int)a[dbkey] < (int)value) : q.Where(a => a.Beatmaps.Any(b => (int)b[dbkey] < (int)value));
+
+						case "<:":
+						case "<=":
+							return fromset ? q.Where(a => (int)a[dbkey] <= (int)value) : q.Where(a => a.Beatmaps.Any(b => (int)b[dbkey] <= (int)value));
+
+						case ">":
+							return fromset ? q.Where(a => (int)a[dbkey] > (int)value) : q.Where(a => a.Beatmaps.Any(b => (int)b[dbkey] > (int)value));
+
+						case ">:":
+						case ">=":
+							return fromset ? q.Where(a => (int)a[dbkey] >= (int)value) : q.Where(a => a.Beatmaps.Any(b => (int)b[dbkey] >= (int)value));
+
+						case "=":
+						case ":":
+							return fromset ? q.Where(a => (int)a[dbkey] == (int)value) : q.Where(a => a.Beatmaps.Any(b => (int)b[dbkey] == (int)value));
+
+						default: throw new Exception("invalid logic");
+					}
+
+				case "string":
+					switch (_type)
+					{
+						case "=":
+						case ":":
+							return fromset ? q.Where(a => (string)a[dbkey] == (string)value) : q.Where(a => a.Beatmaps.Any(b => (string)b[dbkey] == (string)value));
+
+						default: throw new Exception("invalid logic");
+					}
+				default:
+					throw new Exception($"{keymatch.Item3} Type isnt supported yet.");
+			}
+		}
+		private static string[] matchable = new string[] { "<", "<=", "<:", ">", ">=", ">:", "=", ":" };
+
+
+		// key, dbkey, type, cannotbenegative, queryfromset
+		private static (string, string, string, bool, bool)[] KeyMatch = new (string, string, string, bool, bool)[]
+		{
+			("stars", "DiffRating", "float", true, false),
+			("ar", "DiffApproach", "float", true, false),
+			("dr", "DiffDrain", "float", true, false),
+			("hp", "DiffDrain", "float", true, false),
+			("cs", "DiffSize", "float", true, false),
+			("od", "DiffOverall", "float", true, false),
+			("bpm", "BPM", "float", true, false),
+
+			("length", "TotalLength", "int", true, false), // 1000ms -> 1
+			("keys", "DiffSize", "int", true, false),
+			//("divisor", "", "int", true, false),
+			("status", "Ranked", "int", false, false),
+			("creator", "Creator", "string", true, true),
+			("artist", "Artist", "string", true, true)
+		};
+		private static int ParseLength(string value)
+		{
+			var _numstr = String.Join("", value.ToCharArray().Where(a => Char.IsDigit(a)));
+			var _type = String.Join("", value.ToCharArray().Where(a => Char.IsLetter(a)));
+			if (_numstr + _type != value || int.TryParse(_numstr, out int _num)) return 0;
+			switch (_type)
+			{
+				default:
+					return -1;
+				case "ms":
+					return Convert.ToInt32(_num * 0.001);
+				case "s":
+					return _num * 1;
+				case "m":
+					return _num * 60;
+				case "h":
+					return _num * 3600;
+			}
 		}
 	}
 }
