@@ -219,6 +219,7 @@ namespace Sakamoto.Controllers.Search
 			switch (keymatch.Item3)
 			{
 				case "float":
+					if (unsigned && (float)value < 0) throw new Exception($"Value {key} is negative.");
 					switch (_type)
 					{
 						case "<":
@@ -243,6 +244,7 @@ namespace Sakamoto.Controllers.Search
 					}
 
 				case "int":
+					if (unsigned && (int)value < 0) throw new Exception($"Value {key} is negative.");
 					switch (_type)
 					{
 						case "<":
