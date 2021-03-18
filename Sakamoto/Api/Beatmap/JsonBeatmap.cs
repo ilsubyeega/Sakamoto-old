@@ -22,6 +22,8 @@ namespace Sakamoto.Api
 		public int TotalLength;
 		[JsonProperty("version")]
 		public string Version;
+		[JsonProperty("ranked")]
+		public int Ranked;
 		[JsonProperty("beatmapset", NullValueHandling = NullValueHandling.Ignore)]
 		public JsonBeatmapSetCompact BeatmapSet;
 		[JsonProperty("checksum", NullValueHandling = NullValueHandling.Ignore)]
@@ -67,8 +69,6 @@ namespace Sakamoto.Api
 		public int PassCount;
 		[JsonProperty("playcount")]
 		public int PlayCount;
-		[JsonProperty("ranked")]
-		public int Ranked;
 		[JsonProperty("url")]
 		public string Url;
 	}

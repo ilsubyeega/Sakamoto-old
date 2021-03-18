@@ -42,6 +42,8 @@ namespace Sakamoto.Api
 		public int? UserId;
 		[JsonProperty("video")]
 		public bool HasVideo;
+		[JsonProperty("ranked")]
+		public int Ranked;
 
 		[JsonProperty("beatmaps", NullValueHandling = NullValueHandling.Ignore)]
 		public JsonBeatmapCompact[] Beatmaps = null;
@@ -95,8 +97,6 @@ namespace Sakamoto.Api
 		public string LegacyThreadUrl = null; // ignore
 		[JsonProperty("nominations_summary")]
 		public JsonNominationSummaryMeta NominationSummary;
-		[JsonProperty("ranked")]
-		public int Ranked;
 		[JsonProperty("ranked_date")]
 		public string RankedDate;
 		[JsonProperty("storyboard")]

@@ -35,6 +35,7 @@ namespace Sakamoto.Transformer
 			a.Title = b.Title;
 			a.TitleUnicode = b.TitleUnicode;
 			a.HasVideo = b.IsVideo;
+			a.Ranked = b.Ranked;
 			a.Creator = b.Creator;
 			a.UserId = b.User ?? -1;
 		}
@@ -58,7 +59,6 @@ namespace Sakamoto.Transformer
 			a.IsScoreable = b.Ranked > 0;
 			a.LastUpdated = DateTimeOffset.FromUnixTimeSeconds(b.KeesuUpdatedDate).ToString("o");
 			a.NominationSummary = new JsonNominationSummaryMeta();
-			a.Ranked = b.Ranked;
 			a.RankedDate = b.KeesuModified ? DateTimeOffset.FromUnixTimeSeconds(b.KeesuUpdatedDate).ToString("o") : DateTimeOffset.FromUnixTimeSeconds(b.UpdatedDate).ToString("o");
 			a.HasStoryBoard = b.IsStoryboard;
 			a.SubmittedDate = DateTimeOffset.FromUnixTimeSeconds(b.SubmitDate).ToString("o");

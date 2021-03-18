@@ -26,6 +26,7 @@ namespace Sakamoto.Transformer
 			compact.Status = (BeatmapStatus)beatmap.Ranked;
 			compact.TotalLength = beatmap.TotalLength;
 			compact.Version = beatmap.DifficultyName;
+			compact.Ranked = beatmap.Ranked;
 			compact.MaxCombo = beatmap.MaxCombo;
 		}
 		public static JsonBeatmap ToJsonBeatmap(this DBBeatmap beatmap)
@@ -54,7 +55,6 @@ namespace Sakamoto.Transformer
 			a.ModeInt = b.PlayMode;
 			a.PassCount = b.PlayCount;
 			a.PlayCount = b.PlayCount;
-			a.Ranked = b.Ranked;
 			a.Url = $"https://keesu.512.kr/beatmap/{b.BeatmapId}";
 		}
 		public static void IncludeBeatmapSet(this JsonBeatmap beatmap, JsonBeatmapSetCompact beatmapset)
