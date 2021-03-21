@@ -16,7 +16,7 @@ namespace Sakamoto.Util.Database
 
 		public static string ToQuery(string from)
 		{
-			if (from == null) return null;
+			if (from == null || from.Length == 0) return null;
 
 			var splitted = from.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
