@@ -21,7 +21,7 @@ namespace Sakamoto
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<Startup>();
-					webBuilder.UseUrls("https://localhost:23212/");
+					webBuilder.UseUrls("https://localhost:23212/", "http://localhost:23211");
 					webBuilder.UseKestrel(options => options.AddServerHeader = false);
 				});
 	}

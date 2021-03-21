@@ -149,8 +149,6 @@ namespace Sakamoto
 				app.UseDeveloperExceptionPage();
 			}
 
-			app.UseHttpsRedirection();
-
 			app.UseRouting();
 
 			app.UseAuthentication();
