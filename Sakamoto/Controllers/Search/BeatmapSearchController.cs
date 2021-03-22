@@ -9,6 +9,7 @@ using Sakamoto.Transformer;
 using Sakamoto.Util.Database;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -47,7 +48,6 @@ namespace Sakamoto.Controllers.Search
 			DBBeatmapSet[] list;
 
 			IQueryable<DBBeatmapSet> q = _dbcontext.BeatmapSets;
-
 
 			if (searchcategory != null && Enum.TryParse(typeof(BeatmapCategory), searchcategory, true, out object? categoryobj))
 			{
@@ -93,7 +93,8 @@ namespace Sakamoto.Controllers.Search
 			if (languageid != 0 && Enum.IsDefined(typeof(BeatmapLanguage), languageid))
 				q = q.Where(a => (int)a["LanguageId"] == languageid);
 
-			q = q.Where(a => a.IsNsfw == nsfw);
+			if (!nsfw)
+				q = q.Where(a => a.IsNsfw == false);
 
 
 			query = ParseAdvancedQuery(ref q, query);
@@ -165,18 +166,13 @@ namespace Sakamoto.Controllers.Search
 			q = q.Skip(offset).Take(limit > 100 ? 50 : limit);
 			q = q.Include(a => a.Beatmaps);
 
-			Console.WriteLine(q.ToQueryString());
-			list = q.ToArray();
-
-
-
+			list = q.AsNoTracking().ToArray();
 
 			var blist = new List<JsonBeatmapSet>();
 			foreach (var a in list)
 			{
 				var bblist = new List<JsonBeatmapCompact>();
-				var b = _dbcontext.Beatmaps.Where(o => a.BeatmapsetId == o.BeatmapsetId).ToArray();
-				foreach (var i in b)
+				foreach (var i in a.Beatmaps)
 					bblist.Add(i.ToJsonBeatmapCompact());
 
 				var k = a.ToJsonBeatmapSet();
