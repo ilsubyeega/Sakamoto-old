@@ -18,6 +18,7 @@ namespace Sakamoto.Controllers
 {
 	[Route("api/v2/")]
 	[ApiController]
+	[Authorize]
 	public class UsersController : ControllerBase
 	{
 		private readonly MariaDBContext _dbcontext;
@@ -32,7 +33,6 @@ namespace Sakamoto.Controllers
 		/// <param name="mode">GameMode. User default mode will be used if not specified.</param>
 
 		[HttpGet("me/{mode?}")]
-		[Authorize]
 		public async Task<IActionResult> Me(string mode = "osu")
 		{
 			return await UserQuery((int)HttpContext.Items["userId"], (GameMode?)Enum.Parse(typeof(GameMode), mode) ?? GameMode.osu);
@@ -41,8 +41,7 @@ namespace Sakamoto.Controllers
 		/// Returns list of users.
 		/// </summary>
 		/// <param name="ids">User id to be returned. Specify once for each user id requested. Up to 50 users can be requested at once.</param>
-		[HttpGet("users/"), Produces("text/plain")]
-		[Authorize]
+		[HttpGet("users/")]
 		public async Task<IActionResult> UserArray([FromQuery(Name = "ids[]")] int[] ids)
 		{
 			if (ids.Length == 0) return StatusCode(401, Error("Bad request. (No array)"));
@@ -57,24 +56,19 @@ namespace Sakamoto.Controllers
 				if (us == null) continue;
 				rs.Add(o.ToUser(us));
 			}
-			return StatusCode(200, rs.SerializeObject());
+			return StatusCode(200, rs);
 		}
 
 
 		[HttpGet("users/{userid}")]
-		[Authorize]
 		public async Task<IActionResult> Users(int userid) => await UserQuery(userid, null);
 		[HttpGet("users/{userid}/osu")]
-		[Authorize]
 		public async Task<IActionResult> UsersOsu(int userid) => await UserQuery(userid, GameMode.osu);
 		[HttpGet("users/{userid}/taiko")]
-		[Authorize]
 		public async Task<IActionResult> UsersTaiko(int userid) => await UserQuery(userid, GameMode.taiko);
 		[HttpGet("users/{userid}/fruits")]
-		[Authorize]
 		public async Task<IActionResult> UsersFruits(int userid) => await UserQuery(userid, GameMode.fruits);
 		[HttpGet("users/{userid}/mania")]
-		[Authorize]
 		public async Task<IActionResult> UsersMania(int userid) => await UserQuery(userid, GameMode.mania);
 
 
@@ -102,7 +96,6 @@ namespace Sakamoto.Controllers
 				gameuser.GraveyardMapsetCount = submits.Count(a => a.Ranked == (int)BeatmapStatus.graveyard);
 			}
 			
-
 			return StatusCode(200, gameuser);
 		}
 
@@ -114,11 +107,11 @@ namespace Sakamoto.Controllers
 		/// <param name="offset">Result offset for pagination.</param>
 		/// <returns></returns>
 		[HttpGet("users/{userid}/kudosu")]
-		[Authorize]
 		public async Task<IActionResult> Kudosu(int userid, int limit = 5, int offset = 0)
 		{
-			return StatusCode(200, new List<JsonKudosuInfo>().ToArray());
+			return StatusCode(200, new List<JsonKudosuInfo>().ToArray()); // todo
 		}
+
 		/// <summary>
 		/// This endpoint returns the scores of specified user.
 		/// </summary>
@@ -134,6 +127,7 @@ namespace Sakamoto.Controllers
 		{
 			return StatusCode(200, new List<string>().ToArray()); // todo
 		}
+
 		/// <summary>
 		/// Returns the beatmaps of specified user.
 		/// </summary>
@@ -159,7 +153,6 @@ namespace Sakamoto.Controllers
 			return StatusCode(200, blist);
 		}
 
-
 		/// <summary>
 		/// Returns recent activity.
 		/// </summary>
@@ -173,13 +166,8 @@ namespace Sakamoto.Controllers
 			return StatusCode(200, new List<string>().ToArray()); // todo
 		}
 
-
-
-
-
 		// undocumented
-		[HttpGet("friends"), Produces("text/plain")]
-		[Authorize]
+		[HttpGet("friends")]
 		public IActionResult Friends()
 		{
 			/*var token = _dbcontext.AccessTokens.FirstOrDefault(a => a.Id == JwtUtil.GetIdFromHttpContext(HttpContext));
@@ -189,7 +177,7 @@ namespace Sakamoto.Controllers
 			Console.WriteLine(json);*/
 
 			var list = new List<osu.Game.Users.User>();
-			return Ok(list.SerializeObject());
+			return Ok(list.ToArray());
 		}
 
 

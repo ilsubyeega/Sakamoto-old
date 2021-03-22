@@ -21,14 +21,13 @@ namespace Sakamoto.Controllers
 {
 	[Route("api/v2/")]
 	[ApiController]
-	[Produces("text/plain")]
+	[Authorize]
 	public class ScoresController : ControllerBase
 	{
 		private readonly MariaDBContext _dbcontext;
 		public ScoresController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
 
 		[HttpGet("beatmaps/{beatmapid}/scores")]
-		[Authorize]
 		public async Task<IActionResult> Scores(int beatmapid, string type = "global", string mode = "osu", [FromQuery(Name = "mods[]")] string[] mods = null)
 		{
 
@@ -71,7 +70,7 @@ namespace Sakamoto.Controllers
 				}
 			}
 
-			return StatusCode(200, result.SerializeObject());
+			return StatusCode(200, result);
 		}
 
 

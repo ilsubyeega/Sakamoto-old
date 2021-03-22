@@ -43,7 +43,7 @@ namespace Sakamoto.Controllers.Chat
 				}	
 				list.Add(json);
 			}
-				
+			
 			return StatusCode(200, list);
 		}
 		[HttpPost("chat/channels")]
@@ -100,7 +100,7 @@ namespace Sakamoto.Controllers.Chat
 			var messages = _dbcontext.Messages.Where(a => a.ChannelId == chan.ChannelId).OrderByDescending(a => a.Timestamp).Take(50);
 			messages = messages.OrderBy(a => a.Timestamp);
 			var jsonchannel = chan.ToJsonChannel();
-			jsonchannel.SetLastRead(0);
+			jsonchannel.SetLastRead(0); // no idea :c
 			jsonchannel.IncludeMessages(messages.ToArray(), _dbcontext);
 			jsonchannel.IncludeUsers(new int[] { userid, target_id.Value });
 			return StatusCode(200, jsonchannel);
@@ -131,9 +131,7 @@ namespace Sakamoto.Controllers.Chat
 			};
 			_dbcontext.UserChannels.Add(userchannel);
 			await _dbcontext.SaveChangesAsync();
-			var rs = jsonchannel;
-			Console.WriteLine(rs.SerializeObject());
-			return StatusCode(200, rs);
+			return StatusCode(200, jsonchannel);
 		}
 		[HttpDelete("chat/channels/{channelid}/users/{userid}")]
 		public async Task<IActionResult> LeaveChannel(int channelid, int userid)
