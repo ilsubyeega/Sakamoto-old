@@ -26,7 +26,7 @@ namespace Sakamoto.Database.Models.Beatmap
 		[Column("ranked")]
 		public int Ranked { get; set; }
 		[Column("keesu_ranked")]
-		public int KeesuRanked { get; set; }
+		public int? KeesuRanked { get; set; }
 		[Column("diff_rating")]
 		public float DiffRating { get; set; }
 		[Column("diff_size")]

@@ -64,7 +64,7 @@ namespace Sakamoto.Database.Models.Beatmap
 		[Column("playcount")]
 		public int PlayCount { get; set; }
 		[Column("deleted_at")]
-		public int DeletedAt { get; set; }
+		public int? DeletedAt { get; set; }
 		[Column("hype")]
 		public int Hype { get; set; }
 		[Column("should_refresh")]

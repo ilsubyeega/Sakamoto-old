@@ -47,6 +47,9 @@ namespace Sakamoto.Controllers.Search
 			var userid = (int)HttpContext.Items["userId"];
 			DBBeatmapSet[] list;
 
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+
 			IQueryable<DBBeatmapSet> q = _dbcontext.BeatmapSets;
 
 			if (searchcategory != null && Enum.TryParse(typeof(BeatmapCategory), searchcategory, true, out object? categoryobj))
@@ -151,6 +154,9 @@ namespace Sakamoto.Controllers.Search
 					case BeatmapSortCriteria.Artist:
 						q = isasc ? q.OrderBy(a => a.Artist) : q.OrderByDescending(a => a.Artist);
 						break;
+					case BeatmapSortCriteria.Difficulty:
+						q = isasc ? q.OrderBy(a => a.VersionsAvailable) : q.OrderByDescending(a => a.VersionsAvailable);
+						break;
 					case BeatmapSortCriteria.Ranked:
 						q = isasc ? q.OrderBy(a => a.UpdatedDate) : q.OrderByDescending(a => a.UpdatedDate);
 						break;
@@ -163,10 +169,16 @@ namespace Sakamoto.Controllers.Search
 				}
 			}
 
+			if (rulesetid != null)
+				q = q.Where(a => a.Beatmaps.Any(a => a.PlayMode == rulesetid));
+
 			q = q.Skip(offset).Take(limit > 100 ? 50 : limit);
 			q = q.Include(a => a.Beatmaps);
 
 			list = q.AsNoTracking().ToArray();
+
+			Console.WriteLine(q.ToQueryString());
+			Console.WriteLine($"Query: {stopwatch.ElapsedMilliseconds}ms");
 
 			var blist = new List<JsonBeatmapSet>();
 			foreach (var a in list)
@@ -195,6 +207,9 @@ namespace Sakamoto.Controllers.Search
 				recommended_difficulty = 7,
 				total = blist.Count()
 			};
+
+			Console.WriteLine($"Finish: {stopwatch.ElapsedMilliseconds}");
+
 			return StatusCode(200, result);
 		}
 
