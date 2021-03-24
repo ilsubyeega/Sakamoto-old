@@ -36,5 +36,7 @@ namespace Sakamoto.Helper
 		public string UUID;
 		[JsonProperty("last_updated")]
 		public string LastUpdated;
+		[JsonProperty("ranked_date")]
+		public string RankedDate; // nullable
 	}
 }

@@ -97,7 +97,7 @@ namespace Sakamoto.Helper
 					if (overwrite && context.Beatmaps.Any(a=>a.BeatmapId == dbbtmprs.BeatmapId))
 					{
 						var beatmap = context.Beatmaps.First(a => a.BeatmapId == dbbtmprs.BeatmapId);
-						ReflectionUtil.Copy(dbbtmprs, beatmap);
+						dbbtmprs.CopyTo(beatmap);
 					} else
 					{
 						context.Beatmaps.Add(dbbtmprs);

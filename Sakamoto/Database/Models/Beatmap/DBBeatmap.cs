@@ -56,5 +56,30 @@ namespace Sakamoto.Database.Models.Beatmap
 		[Column("updated_date")]
 		public long UpdatedDate { get; set; }
 		public virtual DBBeatmapSet BeatmapSet { get; set; }
+		public void CopyTo(DBBeatmap to)
+		{
+			to.BeatmapsetId = BeatmapsetId;
+			to.BeatmapId = BeatmapId;
+			to.Checksum = Checksum;
+			to.DifficultyName = DifficultyName;
+			to.TotalLength = TotalLength;
+			to.HitLength = HitLength;
+			to.Ranked = Ranked;
+			to.KeesuRanked = KeesuRanked;
+			to.DiffRating = DiffRating;
+			to.DiffSize = DiffSize;
+			to.DiffDrain = DiffDrain;
+			to.DiffOverall = DiffOverall;
+			to.DiffApproach = DiffApproach;
+			to.CountTotal = CountTotal;
+			to.CountNormal = CountNormal;
+			to.CountSlider = CountSlider;
+			to.CountSpinner = CountSpinner;
+			to.MaxCombo = MaxCombo;
+			to.BPM = BPM;
+			to.PlayCount = PlayCount;
+			to.PlayMode = PlayMode;
+			to.UpdatedDate = UpdatedDate;
+		}
 	}
 }
