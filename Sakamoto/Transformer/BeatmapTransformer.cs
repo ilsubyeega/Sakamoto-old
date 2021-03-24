@@ -23,6 +23,7 @@ namespace Sakamoto.Transformer
 			compact.DifficultyRating = beatmap.DiffRating;
 			compact.Id = beatmap.BeatmapId;
 			compact.Mode = (GameMode)beatmap.PlayMode;
+			compact.ModeInt = beatmap.PlayMode;
 			compact.Status = (BeatmapStatus)beatmap.Ranked;
 			compact.TotalLength = beatmap.TotalLength;
 			compact.Version = beatmap.DifficultyName;
@@ -52,7 +53,6 @@ namespace Sakamoto.Transformer
 			a.HitLength = b.HitLength;
 			a.IsScoreable = (b.Ranked < 3);
 			a.LastUpdated = DateTimeOffset.FromUnixTimeSeconds(b.UpdatedDate).ToString("o");
-			a.ModeInt = b.PlayMode;
 			a.PassCount = b.PlayCount;
 			a.PlayCount = b.PlayCount;
 			a.Url = $"https://keesu.512.kr/beatmap/{b.BeatmapId}";

@@ -16,6 +16,8 @@ namespace Sakamoto.Api
 		public int Id;
 		[JsonProperty("mode")]
 		public GameMode Mode;
+		[JsonProperty("mode_int")]
+		public int ModeInt;
 		[JsonProperty("status")]
 		public BeatmapStatus Status;
 		[JsonProperty("total_length")]
@@ -63,8 +65,6 @@ namespace Sakamoto.Api
 		public bool IsScoreable;
 		[JsonProperty("last_updated")]
 		public string LastUpdated;
-		[JsonProperty("mode_int")]
-		public int ModeInt;
 		[JsonProperty("passcount")]
 		public int PassCount;
 		[JsonProperty("playcount")]
