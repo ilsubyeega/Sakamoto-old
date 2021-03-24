@@ -52,7 +52,7 @@ namespace Sakamoto.Transformer
 		{
 			a.DownloadAvaility = new JsonDownloadAvaility
 			{
-				DownloadDisabled = b.IsDownloadable,
+				DownloadDisabled = !b.IsDownloadable,
 				MoreInformation = b.DownloadDisabledUrl
 			};
 			a.BPM = b.Bpm;
