@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Sakamoto.Api;
 using Sakamoto.Database;
 using Sakamoto.Helper;
 using System;
@@ -21,11 +23,33 @@ namespace Sakamoto.Controllers
 		[HttpGet("beatmapsets/{beatmapset_id}/download")]
 		public async Task<IActionResult> DownloadBeatmap(int beatmapset_id)
 		{
-			var exists = _dbcontext.BeatmapSets.Any(a => a.BeatmapsetId == beatmapset_id);
-			if (!exists) return StatusCode(404, "Not found on current beatmap database");
+			var beatmapset = _dbcontext.BeatmapSets.FirstOrDefault(a => a.BeatmapsetId == beatmapset_id);
+			if (beatmapset == null) return StatusCode(404, "Not found on current beatmap database");
 
 			var bt = Beatconnect.Fetch(beatmapset_id);
-			return Redirect($"https://beatconnect.io/b/{beatmapset_id}/{bt.UUID}/");
+			if (bt == null) return StatusCode(404, "Beatconnect not found atm");
+			var btupdated = DateTimeOffset.Parse(bt.LastUpdated).ToUnixTimeSeconds();
+
+			bool shouldrefresh = false;
+			// in case check beatmapset db from this side.
+			if (beatmapset.UpdatedDate != btupdated)
+			{
+				var rs = await OsuApi.TryReqeust($"{OsuApi.API_ROOT}/beatmapsets/{beatmapset_id}");
+				if (rs == null) throw new Exception("Could not fetch api: No Idea..");
+				var rsval = JsonConvert.DeserializeObject<JsonBeatmapSet>(rs);
+				var rsupdated = DateTimeOffset.Parse(rsval.LastUpdated).ToUnixTimeSeconds();
+				if (rsupdated != beatmapset.UpdatedDate) // If database was outdated
+				{
+					Console.WriteLine($"Beatmapset {beatmapset_id} was outdated from here, updating");
+					await BeatmapSeeder.SeedSet(beatmapset_id, true, _dbcontext);
+					shouldrefresh = rsupdated != btupdated;
+				} else // Its same; so Beatconnect was wrong.
+				{
+					shouldrefresh = true;
+				}
+			}
+
+			return Redirect($"https://beatconnect.io/b/{beatmapset_id}/{bt.UUID}/" + (shouldrefresh ? "?new=1" : ""));
 		}
 	}
 }

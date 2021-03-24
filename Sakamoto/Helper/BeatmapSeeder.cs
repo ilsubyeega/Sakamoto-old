@@ -2,10 +2,12 @@
 using Sakamoto.Api;
 using Sakamoto.Database;
 using Sakamoto.Database.Models.Beatmap;
+using Sakamoto.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Sakamoto.Helper
@@ -52,33 +54,35 @@ namespace Sakamoto.Helper
 			}
 			try
 			{
-				var beatmapsets = new DBBeatmapSet
-				{
-					BeatmapsetId = value.Id,
-					Creator = value.Creator,
-					Artist = value.Artist,
-					ArtistUnicode = value.ArtistUnicode,
-					Title = value.Title,
-					TitleUnicode = value.TitleUnicode,
-					Source = value.Source,
-					TagsRaw = value.Tags,
-					IsVideo = value.HasVideo,
-					IsStoryboard = value.HasStoryBoard,
-					//IsEpilepsy
-					IsNsfw = value.IsNsfw,
-					Bpm = value.BPM,
-					VersionsAvailable = value?.Beatmaps == null ? 0 : value.Beatmaps.Count(),
-					SubmitDate = ParseTime(value.SubmittedDate).ToUnixTimeSeconds(),
-					UpdatedDate = ParseTime(value.LastUpdated).ToUnixTimeSeconds(),
-					KeesuUpdatedDate = DateTimeOffset.Now.ToUnixTimeSeconds(),
-					//Rating
-					GenreId = value.Genre.Id,
-					LanguageId = value.Language.Id,
-					IsDownloadable = value.DownloadAvaility?.DownloadDisabled ?? true,
-					DownloadDisabledUrl = value.DownloadAvaility?.MoreInformation,
-					ShouldRefresh = value.Ranked <= 0,
-					Ranked = value.Ranked,
-				};
+				var beatmapsets = new DBBeatmapSet();
+				if (overwrite && context.BeatmapSets.Any(a => a.BeatmapsetId == beatmapset_id))
+					beatmapsets = context.BeatmapSets.First(a => a.BeatmapsetId == beatmapset_id);
+
+				beatmapsets.BeatmapsetId = value.Id;
+				beatmapsets.Creator = value.Creator;
+				beatmapsets.Artist = value.Artist;
+				beatmapsets.ArtistUnicode = value.ArtistUnicode;
+				beatmapsets.Title = value.Title;
+				beatmapsets.TitleUnicode = value.TitleUnicode;
+				beatmapsets.Source = value.Source;
+				beatmapsets.TagsRaw = value.Tags;
+				beatmapsets.IsVideo = value.HasVideo;
+				beatmapsets.IsStoryboard = value.HasStoryBoard;
+				//IsEpilepsy
+				beatmapsets.IsNsfw = value.IsNsfw;
+				beatmapsets.Bpm = value.BPM;
+				beatmapsets.VersionsAvailable = value?.Beatmaps == null ? 0 : value.Beatmaps.Count();
+				beatmapsets.SubmitDate = ParseTime(value.SubmittedDate).ToUnixTimeSeconds();
+				beatmapsets.UpdatedDate = ParseTime(value.LastUpdated).ToUnixTimeSeconds();
+				beatmapsets.KeesuUpdatedDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+				//Rating
+				beatmapsets.GenreId = value.Genre.Id;
+				beatmapsets.LanguageId = value.Language.Id;
+				beatmapsets.IsDownloadable = value.DownloadAvaility?.DownloadDisabled ?? true;
+				beatmapsets.DownloadDisabledUrl = value.DownloadAvaility?.MoreInformation;
+				beatmapsets.ShouldRefresh = value.Ranked <= 0;
+				beatmapsets.Ranked = value.Ranked;
+				
 
 				var tasks = new List<Task<DBBeatmap>>();
 				foreach (var bc in value.Beatmaps)
@@ -90,10 +94,17 @@ namespace Sakamoto.Helper
 				{
 					var dbbtmprs = task.Result;
 					if (dbbtmprs == null) throw new Exception($"Beatmap wasnt found. Set id: {beatmapset_id}"); // should be exist
-					context.Beatmaps.Add(dbbtmprs);
+					if (overwrite && context.Beatmaps.Any(a=>a.BeatmapId == dbbtmprs.BeatmapId))
+					{
+						var beatmap = context.Beatmaps.First(a => a.BeatmapId == dbbtmprs.BeatmapId);
+						ReflectionUtil.Copy(dbbtmprs, beatmap);
+					} else
+					{
+						context.Beatmaps.Add(dbbtmprs);
+					}
 				}
 
-				context.BeatmapSets.Add(beatmapsets);
+				if (!overwrite) context.BeatmapSets.Add(beatmapsets);
 
 				await context.SaveChangesAsync();
 				QueuedSet.Remove(beatmapset_id);
@@ -119,18 +130,13 @@ namespace Sakamoto.Helper
 		private static async Task<DBBeatmap> ToDatabasedBeatmap(JsonBeatmapCompact bc)
 		{
 			var rs = await OsuApi.TryReqeust(BeatmapFetchUrl(bc.Id));
-			var rslegacy = await OsuApi.FetchLegacyBeatmap(bc.Id);
 			if (rs == null) return null; // this should be exist since it has beatmapcompact from beatmapset.
-			if (rslegacy == null)
-			{
-				Console.WriteLine("BeatmapSeeder: Failed to fetch from osu api v1.");
-			}
 			JsonBeatmap b = JsonConvert.DeserializeObject<JsonBeatmap>(rs);
 			var beatmap = new DBBeatmap
 			{
 				BeatmapsetId = b.BeatmapSetId,
 				BeatmapId = b.Id,
-				Checksum = rslegacy?.Checksum, // provided by api v1 until api v2 support this https://github.com/ppy/osu-web/issues/6777
+				Checksum = b.CheckSum,
 				DifficultyName = b.Version,
 				TotalLength = b.TotalLength,
 				HitLength = b.HitLength,

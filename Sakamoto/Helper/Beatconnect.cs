@@ -17,7 +17,16 @@ namespace Sakamoto.Helper
 			using (var client = new HttpClient())
 			{
 				var data = client.GetAsync($"https://beatconnect.io/api/beatmap/{beatmapsetid}/?token={key()}").Result;
-				return JsonConvert.DeserializeObject<BeatconnectSetJson>(data.Content.ReadAsStringAsync().Result);
+				try
+				{
+					return JsonConvert.DeserializeObject<BeatconnectSetJson>(data.Content.ReadAsStringAsync().Result);
+				} catch (Exception e)
+				{
+					if (data.StatusCode == HttpStatusCode.NotFound)
+						return null;
+					throw e;
+				}
+				
 			}
 		}
 	}
@@ -25,5 +34,7 @@ namespace Sakamoto.Helper
 	{
 		[JsonProperty("unique_id")]
 		public string UUID;
+		[JsonProperty("last_updated")]
+		public string LastUpdated;
 	}
 }
