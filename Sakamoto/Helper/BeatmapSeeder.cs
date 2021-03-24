@@ -78,7 +78,7 @@ namespace Sakamoto.Helper
 				//Rating
 				beatmapsets.GenreId = value.Genre.Id;
 				beatmapsets.LanguageId = value.Language.Id;
-				beatmapsets.IsDownloadable = value.DownloadAvaility?.DownloadDisabled ?? true;
+				beatmapsets.IsDownloadable = !value.DownloadAvaility?.DownloadDisabled ?? true;
 				beatmapsets.DownloadDisabledUrl = value.DownloadAvaility?.MoreInformation;
 				beatmapsets.ShouldRefresh = value.Ranked <= 0;
 				beatmapsets.Ranked = value.Ranked;
