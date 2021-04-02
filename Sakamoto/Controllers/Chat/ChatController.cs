@@ -105,9 +105,9 @@ namespace Sakamoto.Controllers.Chat
 
 			
 
-			var channels = _dbcontext.Channels.Where(a => userchannels.Any(b => b.ChannelId == a.ChannelId));
+			var channels = _dbcontext.Channels.Where(a => userchannels.Any(b => b.UserId == userid && b.ChannelId == a.ChannelId));
 			var messages = _dbcontext.Messages
-				.Where(a => a.MessageId > since && userchannels.Any(b => b.ChannelId == a.ChannelId))
+				.Where(a => a.MessageId > since && userchannels.Any(b => b.UserId == userid && b.ChannelId == a.ChannelId))
 				.OrderByDescending(a => a.MessageId)
 				.Take(100)
 				.OrderBy(a => a.MessageId);
