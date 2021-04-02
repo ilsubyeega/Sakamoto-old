@@ -104,14 +104,9 @@ namespace Sakamoto.Controllers.Search
 
 			var fulltextquery = FulltextUtil.ToQuery(query);
 			if (fulltextquery != null && string.Join("", fulltextquery.Split(" ")).Length != 0)
-			{
 				q = q.Where(a => EF.Functions.Match(
 					new[] { a.Creator, a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode, a.Source, a.TagsRaw },
-					fulltextquery, MySqlMatchSearchMode.Boolean))
-					.OrderByDescending(a => EF.Functions.Match(
-						new[] { a.Creator, a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode, a.Source, a.TagsRaw },
 					fulltextquery, MySqlMatchSearchMode.Boolean));
-			}
 
 			string[] splittedextra = extras == null ? new string[] { } : extras.Split(".");
 			foreach (var splittedvalue in splittedextra)
@@ -136,17 +131,19 @@ namespace Sakamoto.Controllers.Search
 				{
 					default:
 					case BeatmapSortCriteria.Relevance:
-						/* TODO: EF.Functions.Match returns boolean, it wont sort it atm
-						 * 
-						 * if (isasc)
+						 if (isasc)
+						{
 							q = q.OrderBy(a => EF.Functions.Match(
-								new[] { a.Creator, a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode, a.Source, a.TagsRaw },
+								new[] { a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode},
 							fulltextquery, MySqlMatchSearchMode.Boolean));
+						}
 						else
+						{
 							q = q.OrderByDescending(a => EF.Functions.Match(
-								new[] { a.Creator, a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode, a.Source, a.TagsRaw },
+								new[] { a.Artist, a.ArtistUnicode, a.Title, a.TitleUnicode },
 							fulltextquery, MySqlMatchSearchMode.Boolean));
-						*/
+						}
+							
 						break;
 					case BeatmapSortCriteria.Title:
 						q = isasc ? q.OrderBy(a => a.Title) : q.OrderByDescending(a => a.Title);
