@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Sakamoto.Enums;
+using System.Collections.Generic;
 
 namespace Sakamoto.Api
 {
@@ -22,7 +23,7 @@ namespace Sakamoto.Api
 		[JsonProperty("perfect")]
 		public bool Perfect;
 		[JsonProperty("statistics")]
-		public JsonStatics Statistics;
+		public Dictionary<string, int> Statistics;
 		[JsonProperty("pp")]
 		public double Pp;
 		[JsonProperty("rank")]
@@ -62,20 +63,5 @@ namespace Sakamoto.Api
 		public JsonScore[] Scores;
 		[JsonProperty("userScore", NullValueHandling = NullValueHandling.Ignore)]
 		public JsonUserScore UserScores;
-	}
-	public class JsonStatics
-	{
-		[JsonProperty("count_300")]
-		public int Count300 = 0;
-		[JsonProperty("count_100")]
-		public int Count100 = 0;
-		[JsonProperty("count_50")]
-		public int Count50 = 0;
-		[JsonProperty("count_miss")]
-		public int CountMiss = 0;
-		[JsonProperty("count_geki")]
-		public int CountGeki = 0;
-		[JsonProperty("count_katu")]
-		public int CountKatu = 0;
 	}
 }

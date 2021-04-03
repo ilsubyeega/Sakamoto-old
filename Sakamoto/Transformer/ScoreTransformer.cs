@@ -37,15 +37,7 @@ namespace Sakamoto.Transformer
 				Score = score.Score,
 				MaxCombo = score.MaxCombo,
 				Perfect = score.FullCombo,
-				Statistics = new JsonStatics
-				{
-					Count300 = score.Count300,
-					Count100 = score.Count100,
-					Count50 = score.Count50,
-					CountGeki = score.CountGeki,
-					CountKatu = score.CountKatu,
-					CountMiss = score.CountMiss
-				},
+				Statistics = new Dictionary<string, int>(),
 				Pp = score.Pp,
 				Rank = GradeUtil.CalculateOsu(score.Mods, score.Count50, score.Count100, score.Count300, score.CountMiss),
 				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(score.Time).ToString("o"),
@@ -53,6 +45,12 @@ namespace Sakamoto.Transformer
 				Beatmap = beatmap
 			};
 
+			s.Statistics.Add("count_geki", score.CountGeki);
+			s.Statistics.Add("count_300", score.Count300);
+			s.Statistics.Add("count_katu", score.CountKatu);
+			s.Statistics.Add("count_100", score.Count100);
+			s.Statistics.Add("count_50", score.Count50);
+			s.Statistics.Add("count_miss", score.CountMiss);
 			return s;
 		}
 	}
