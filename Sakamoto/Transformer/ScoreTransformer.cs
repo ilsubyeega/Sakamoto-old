@@ -9,11 +9,11 @@ namespace Sakamoto.Transformer
 {
 	public static class ScoreTransformer
 	{
-		public static JsonScore ToJsonScore(this DBLegacyScore score, JsonBeatmap beatmap = null)
+		public static JsonScore ToJsonScore(this DBLegacyScore score, JsonUserCompact user = null, JsonBeatmap beatmap = null)
 		{
 			
 
-			var u = new JsonUserCompact
+			var u = user ?? new JsonUserCompact
 			{
 				AvatarUrl = "https://keesu.ilsubyeega.com/static/default_avatar.png",
 				Country = new JsonCountry

@@ -47,7 +47,7 @@ namespace Sakamoto.Controllers.Score
 			var list = new List<JsonScore>();
 			var offsets = CalculateListOffset((int)gm, combo, a.ToArray());
 			foreach (var val in offsets)
-				list.Add(val.ToJsonScore(beatmapjson));
+				list.Add(val.ToJsonScore(null, beatmapjson));
 
 			var result = new JsonBeatmapScores
 			{
