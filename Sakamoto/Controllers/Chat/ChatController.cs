@@ -19,7 +19,7 @@ namespace Sakamoto.Controllers.Chat
 	[ApiController]
 	[Route("api/v2/")]
 	[Authorize]
-	public class ChatController : ControllerBase
+	public class ChatController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public ChatController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -43,7 +43,7 @@ namespace Sakamoto.Controllers.Chat
 		public async Task<IActionResult> SendMessage(int channel, [FromForm] string message, [FromForm] bool is_action = false)
 		{
 			if (message == null) return StatusCode(402, "Message cannot be null.");
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 			var q = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == channel);
 			var qu = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == userid);
 			if (q == null) return StatusCode(404, "Channel not found");
@@ -63,7 +63,7 @@ namespace Sakamoto.Controllers.Chat
 		public async Task<IActionResult> SendMessagePrivate([FromForm] int target_id, [FromForm] string message, [FromForm] bool is_action = false)
 		{
 			if (message == null) return StatusCode(402, "Message cannot be null.");
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 			var qq = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => (a.UserId1 == target_id && a.UserId2 == userid) 
 			|| (a.UserId1 == userid && a.UserId2 == target_id));
 			if (qq == null) return StatusCode(404, "channel not found. should create this");
@@ -98,7 +98,7 @@ namespace Sakamoto.Controllers.Chat
 		[HttpGet("chat/updates")]
 		public async Task<IActionResult> GetUpdates(int since, int channel_id = -1, int limit = 50)
 		{
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 
 			var userchannels = _dbcontext.UserChannels.Where(a => a.UserId == userid);
 			if (userchannels == null) return StatusCode(200, new UpdateResponse().SerializeObject());

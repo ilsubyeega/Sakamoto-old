@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sakamoto.Database.Models;
+using Sakamoto.Database.Models.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,13 +12,13 @@ namespace Sakamoto.Controllers
 	public class SakamotoController : ControllerBase
 	{
 		// This two property should exists when [Authorize] Attribute is set.
-		public int? _userid 
-		{
-			get => (int?)HttpContext.Items["userId"];
-		}
 		public DBUser _user 
 		{
 			get => HttpContext.Items["user"] as DBUser;
+		}
+		public DBAccessToken _access
+		{
+			get => HttpContext.Items["access"] as DBAccessToken;
 		}
 
 		public ActionResult SendError(int statuscode, string message)

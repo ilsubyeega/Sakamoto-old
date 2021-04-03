@@ -19,7 +19,7 @@ namespace Sakamoto.Controllers
 	[Route("api/v2/")]
 	[ApiController]
 	[Authorize]
-	public class UsersController : ControllerBase
+	public class UsersController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public UsersController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -35,7 +35,7 @@ namespace Sakamoto.Controllers
 		[HttpGet("me/{mode?}")]
 		public async Task<IActionResult> Me(string mode = "osu")
 		{
-			return await UserQuery((int)HttpContext.Items["userId"], (GameMode?)Enum.Parse(typeof(GameMode), mode) ?? GameMode.osu);
+			return await UserQuery(_user.Id, (GameMode?)Enum.Parse(typeof(GameMode), mode) ?? GameMode.osu);
 		}
 		/// <summary>
 		/// Returns list of users.

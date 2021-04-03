@@ -22,7 +22,7 @@ namespace Sakamoto.Controllers
 	[ApiController]
 	[Route("api/v2/")]
 	[Authorize]
-	public class BeatmapsController : ControllerBase
+	public class BeatmapsController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public BeatmapsController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -52,9 +52,13 @@ namespace Sakamoto.Controllers
 			var blist = new List<JsonBeatmapCompact>();
 			foreach (var b in _dbcontext.Beatmaps.Where(a => a.BeatmapsetId == beatmapset.BeatmapsetId))
 				blist.Add(b.ToJsonBeatmap());
+
+			//var beatmapsetowo = await _dbcontext.BeatmapSets.Include(a => a.Beatmaps).ToListAsync();
+
+
 			bjson.Beatmaps = blist.ToArray();
 
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 			var fav = _dbcontext.MapFavourites.FirstOrDefault(a => a.UserId == userid && a.BeatmapsetId == beatmapsetid);
 			bjson.HasFavourited = (fav != null);
 
@@ -71,6 +75,7 @@ namespace Sakamoto.Controllers
 			var beatmap = await _dbcontext.Beatmaps.FirstOrDefaultAsync(a => a.BeatmapId == id);
 			if (beatmap == null) beatmap = await _dbcontext.Beatmaps.FirstOrDefaultAsync(a => a.Checksum == checksum);
 			if (beatmap == null) return StatusCode(404, "Beatmap Not Found");
+
 			var beatmapset = await _dbcontext.BeatmapSets.FirstOrDefaultAsync(a => a.BeatmapsetId == beatmap.BeatmapsetId);
 			if (beatmapset == null) return StatusCode(404, "Beatmapset Not Found");
 
@@ -104,7 +109,7 @@ namespace Sakamoto.Controllers
 				blist.Add(b.ToJsonBeatmap());
 			bjson.Beatmaps = blist.ToArray();
 
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 			var fav = _dbcontext.MapFavourites.FirstOrDefault(a => a.UserId == userid && a.BeatmapsetId == beatmapset.BeatmapsetId);
 			bjson.HasFavourited = fav != null;
 
@@ -114,7 +119,7 @@ namespace Sakamoto.Controllers
 		[HttpPost("beatmapsets/{beatmapset_id}/favourites")]
 		public async Task<IActionResult> Favourites(int beatmapset_id, [FromForm] string action = null)
 		{
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 
 			var beatmapset = _dbcontext.BeatmapSets.FirstOrDefault(a => a.BeatmapsetId == beatmapset_id);
 			if (beatmapset == null)

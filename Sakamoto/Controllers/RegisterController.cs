@@ -13,7 +13,7 @@ namespace Sakamoto.Controllers
 {
 	[Route("")]
 	[ApiController]
-	public class RegisterController : ControllerBase
+	public class RegisterController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public RegisterController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }

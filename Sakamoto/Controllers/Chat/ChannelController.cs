@@ -20,7 +20,7 @@ namespace Sakamoto.Controllers.Chat
 	[Route("api/v2/")]
 	[Authorize]
 	
-	public class ChannelController : ControllerBase
+	public class ChannelController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public ChannelController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -55,7 +55,7 @@ namespace Sakamoto.Controllers.Chat
 			if (typeenum == null) return StatusCode(422, "ChannelType not found.");
 			if (typeenum != ChannelType.PM) return StatusCode(422, "Current channel type is not supported atm");
 
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 
 			var channel = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => a.UserId1 == userid || a.UserId2 == userid);
 			DBChannel chan;
@@ -116,7 +116,7 @@ namespace Sakamoto.Controllers.Chat
 			 * 
 			if ((ChannelType)channel.Type != ChannelType.PUBLIC)
 			{
-				var user = await _dbcontext.Users.FirstOrDefaultAsync(a => (int)HttpContext.Items["userId"] == userid);
+				var user = await _dbcontext.Users.FirstOrDefaultAsync(a => _user.Id == userid);
 				
 			}*/
 
@@ -124,7 +124,7 @@ namespace Sakamoto.Controllers.Chat
 
 			var userchannel = new DBUserChannel
 			{
-				UserId = (int)HttpContext.Items["userId"],
+				UserId = _user.Id,
 				ChannelId = channel.ChannelId,
 				IsHidden = false,
 				LastReadId = 0
@@ -136,7 +136,7 @@ namespace Sakamoto.Controllers.Chat
 		[HttpDelete("chat/channels/{channelid}/users/{userid}")]
 		public async Task<IActionResult> LeaveChannel(int channelid, int userid)
 		{
-			var userchannel = await _dbcontext.UserChannels.FirstOrDefaultAsync(a => a.ChannelId == channelid && a.UserId == (int)HttpContext.Items["userId"]);
+			var userchannel = await _dbcontext.UserChannels.FirstOrDefaultAsync(a => a.ChannelId == channelid && a.UserId == _user.Id);
 			if (userchannel == null) return StatusCode(404, "Channel is not found or user didnt join the channel.");
 			_dbcontext.UserChannels.Remove(userchannel);
 			await _dbcontext.SaveChangesAsync();

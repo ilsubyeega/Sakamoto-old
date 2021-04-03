@@ -19,7 +19,7 @@ namespace Sakamoto.Controllers.Search
 	[ApiController]
 	[Route("api/v2/")]
 	[Authorize]
-	public class BeatmapSearchController : ControllerBase
+	public class BeatmapSearchController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public BeatmapSearchController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -44,7 +44,7 @@ namespace Sakamoto.Controllers.Search
 			[FromQuery(Name = "cursor[next]")] int offset = 0,
 			[FromQuery(Name = "cursor[limit]")] int limit = 50)
 		{
-			var userid = (int)HttpContext.Items["userId"];
+			var userid = _user.Id;
 			DBBeatmapSet[] list;
 
 			var stopwatch = new Stopwatch();

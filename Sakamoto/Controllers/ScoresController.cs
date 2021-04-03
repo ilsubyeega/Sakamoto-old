@@ -22,7 +22,7 @@ namespace Sakamoto.Controllers
 	[Route("api/v2/")]
 	[ApiController]
 	[Authorize]
-	public class ScoresController : ControllerBase
+	public class ScoresController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public ScoresController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
@@ -56,12 +56,12 @@ namespace Sakamoto.Controllers
 			};
 			if (list.Count > 0)
 			{
-				var user = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == (int)HttpContext.Items["userId"]);
+				var user = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == _user.Id);
 				var rs = offsets.FirstOrDefault(a => a.Username.ToLower() == user.UserName.ToLower());
 				if (rs != null)
 				{
 					var js = rs.ToJsonScore();
-					js.Userid = js.User.Id = (int)HttpContext.Items["userId"];
+					js.Userid = js.User.Id = _user.Id;
 					result.UserScores = new JsonUserScore
 					{
 						Position = Array.IndexOf(offsets, rs) + 1,

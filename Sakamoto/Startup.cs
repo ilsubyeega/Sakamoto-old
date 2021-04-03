@@ -89,8 +89,8 @@ namespace Sakamoto
 						}
 						else
 						{
-							context.HttpContext.Items["userId"] = obj.UserId;
 							context.HttpContext.Items["user"] = user;
+							context.HttpContext.Items["access"] = obj;
 							context.Success();
 						}
 					},

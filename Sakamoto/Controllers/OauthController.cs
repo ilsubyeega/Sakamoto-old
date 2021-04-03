@@ -12,7 +12,7 @@ namespace Sakamoto.Controllers
 {
 	[Route("oauth")]
 	[ApiController]
-	public class OauthController : ControllerBase
+	public class OauthController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
 		public OauthController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
