@@ -42,6 +42,7 @@ namespace Sakamoto
 				l.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
 				l.AddConsole();
 			});
+			
 			services.AddDbContext<MariaDBContext>(
 				options =>
 				{
@@ -52,6 +53,7 @@ namespace Sakamoto
 							  maxRetryCount: 20,
 							  maxRetryDelay: TimeSpan.FromSeconds(10),
 							  errorNumbersToAdd: null);
+						   sqlOptions.UseNewtonsoftJson();
 					   });
 				}
 			);
