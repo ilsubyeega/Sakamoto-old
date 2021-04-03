@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using osu.Game.Rulesets.Scoring;
 using Sakamoto.Enums;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace Sakamoto.Api
 		[JsonProperty("perfect")]
 		public bool Perfect;
 		[JsonProperty("statistics")]
-		public Dictionary<string, int> Statistics;
+		public Dictionary<HitResult, int> Statistics;
 		[JsonProperty("pp")]
 		public double Pp;
 		[JsonProperty("rank")]

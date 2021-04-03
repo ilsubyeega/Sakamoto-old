@@ -1,5 +1,6 @@
 ﻿using Sakamoto.Api;
-using Sakamoto.Database.Models.Legacy;
+using Sakamoto.Database.Models.Score;
+using Sakamoto.Database.Score;
 using Sakamoto.Helper;
 using Sakamoto.Util;
 using System;
@@ -11,7 +12,7 @@ namespace Sakamoto.Transformer
 	{
 		public static JsonScore ToJsonScore(this DBLegacyScore score, JsonUserCompact user = null, JsonBeatmap beatmap = null)
 		{
-			
+			/*
 
 			var u = user ?? new JsonUserCompact
 			{
@@ -51,6 +52,28 @@ namespace Sakamoto.Transformer
 			s.Statistics.Add("count_100", score.Count100);
 			s.Statistics.Add("count_50", score.Count50);
 			s.Statistics.Add("count_miss", score.CountMiss);
+			return s;*/
+
+			return null;
+		}
+		public static JsonScore ToJsonScore(this DBSoloScore score, JsonUserCompact user, JsonBeatmap beatmap)
+		{
+			var s = new JsonScore
+			{
+				Accuracy = score.Accuracy.Value,
+				//Mods = smod.ToArray(),
+				Score = score.TotalScore.Value,
+				MaxCombo = score.MaxCombo.Value,
+				Perfect = score.Perfect,
+				Statistics = score.Statistics,
+				Pp = score.PP.Value,
+				Rank = score.Rank,
+				CreatedAt = score.EndedAt.Value.ToString("o"),
+				User = user,
+				Beatmap = beatmap
+			};
+
+			
 			return s;
 		}
 	}
