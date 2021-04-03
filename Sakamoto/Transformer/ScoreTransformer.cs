@@ -1,6 +1,5 @@
 ﻿using Sakamoto.Api;
 using Sakamoto.Database.Models.Score;
-using Sakamoto.Database.Score;
 using Sakamoto.Helper;
 using Sakamoto.Util;
 using System;
@@ -60,15 +59,19 @@ namespace Sakamoto.Transformer
 		{
 			var s = new JsonScore
 			{
+				Id = score.Id,
+				Userid = score.UserId,
 				Accuracy = score.Accuracy.Value,
-				//Mods = smod.ToArray(),
+				Mods = score.Mods,
 				Score = score.TotalScore.Value,
 				MaxCombo = score.MaxCombo.Value,
 				Perfect = score.Perfect,
 				Statistics = score.Statistics,
-				Pp = score.PP.Value,
-				Rank = score.Rank,
+				Pp = score.PP,
+				Rank = (Enums.Rank)score.Rank,
 				CreatedAt = score.EndedAt.Value.ToString("o"),
+				//Mode = score.RulesetId
+				ModeInt = score.RulesetId,
 				User = user,
 				Beatmap = beatmap
 			};

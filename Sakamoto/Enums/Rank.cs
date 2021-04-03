@@ -17,6 +17,7 @@ namespace Sakamoto.Enums
 		S,
 		SH,
 		X,
-		XH
+		XH,
+		F
 	}
 }

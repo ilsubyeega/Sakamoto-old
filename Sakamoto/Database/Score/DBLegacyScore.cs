@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sakamoto.Database.Models.Legacy
+namespace Sakamoto.Database.Models.Score
 {
 	[Table("old_scores")]
 	[Keyless]

@@ -3,7 +3,7 @@ using Sakamoto.Database.Models;
 using Sakamoto.Database.Models.Beatmap;
 using Sakamoto.Database.Models.Chat;
 using Sakamoto.Database.Models.Group;
-using Sakamoto.Database.Models.Legacy;
+using Sakamoto.Database.Models.Score;
 using Sakamoto.Database.Models.OAuth;
 
 namespace Sakamoto.Database
@@ -40,9 +40,9 @@ namespace Sakamoto.Database
 		public DbSet<DBGroup> Groups { get; set; }
 		public DbSet<DBUserGroup> UserGroups { get; set; }
 
-		// Legacy
+		// Scores
 		public DbSet<DBLegacyScore> LegacyScores { get; set; }
-
+		public DbSet<DBSoloScore> SoloScores { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

@@ -20,7 +20,7 @@ namespace Sakamoto.Database.Models
 		[Column("count_miss")]
 		public long CountMiss { get; set; }
 		[Column("accuracy")]
-		public decimal Accuracy { get; set; }
+		public float Accuracy { get; set; }
 		[Column("playcount")]
 		public int PlayCount { get; set; }
 		[Column("ranked_score")]

@@ -6,7 +6,7 @@ using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets;
 using Sakamoto.Api;
 using Sakamoto.Database;
-using Sakamoto.Database.Models.Legacy;
+using Sakamoto.Database.Models.Score;
 using Sakamoto.Enums;
 using Sakamoto.Helper;
 using Sakamoto.Transformer;

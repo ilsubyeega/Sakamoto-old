@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using osu.Game.Rulesets.Scoring;
 using Sakamoto.Enums;
 using System.Collections.Generic;
@@ -8,15 +9,13 @@ namespace Sakamoto.Api
 	public class JsonScore
 	{
 		[JsonProperty("id")]
-		public int Id = 0;
-		[JsonProperty("best_id")]
-		public int BestId = 0;
+		public long Id = 0;
 		[JsonProperty("user_id")]
 		public int Userid = -1;
 		[JsonProperty("accuracy")]
 		public float Accuracy;
 		[JsonProperty("mods")]
-		public string[] Mods;
+		public JsonMod[] Mods;
 		[JsonProperty("score")]
 		public long Score;
 		[JsonProperty("max_combo")]
@@ -26,8 +25,9 @@ namespace Sakamoto.Api
 		[JsonProperty("statistics")]
 		public Dictionary<HitResult, int> Statistics;
 		[JsonProperty("pp")]
-		public double Pp;
+		public float? Pp;
 		[JsonProperty("rank")]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public Rank Rank;
 		[JsonProperty("created_at")]
 		public string CreatedAt;
