@@ -17,17 +17,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sakamoto.Controllers
+namespace Sakamoto.Controllers.Score
 {
 	[Route("api/v2/")]
 	[ApiController]
 	[Authorize]
-	public class ScoresController : SakamotoController
+	public class LegacyScoresController : SakamotoController
 	{
 		private readonly MariaDBContext _dbcontext;
-		public ScoresController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
+		public LegacyScoresController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
 
-		[HttpGet("beatmaps/{beatmapid}/scores")]
+		[HttpGet("beatmaps/{beatmapid}/legacyscores")]
 		public async Task<IActionResult> Scores(int beatmapid, string type = "global", string mode = "osu", [FromQuery(Name = "mods[]")] string[] mods = null)
 		{
 
