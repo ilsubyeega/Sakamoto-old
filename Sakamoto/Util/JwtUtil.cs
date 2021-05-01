@@ -10,12 +10,13 @@ namespace Sakamoto.Util
 	public static class JwtUtil
 	{
 
-		public static string GenerateToken(string value, Int32 expiresec = 86400)
+		public static string GenerateToken(int? userid, string value, Int32 expiresec = 86400)
 		{
 			var key = new SymmetricSecurityKey(Common.GetKey());
 			var jwt = new JwtSecurityToken(issuer: "Sakamoto",
 				claims: new Claim[] {
-					new Claim("token", value)
+					new Claim("jti", value),
+					new Claim("sub", userid.ToString())
 				},
 				notBefore: DateTime.UtcNow,
 				expires: DateTime.UtcNow.AddSeconds(expiresec),
@@ -23,12 +24,13 @@ namespace Sakamoto.Util
 			);
 			return new JwtSecurityTokenHandler().WriteToken(jwt);
 		}
-		public static string GenerateRefreshToken(string value, Int32 expiresec = 86400 * 30)
+		public static string GenerateRefreshToken(int? userid, string value, Int32 expiresec = 86400 * 30)
 		{
 			var key = new SymmetricSecurityKey(Common.GetKey());
 			var jwt = new JwtSecurityToken(issuer: "Sakamoto",
 				claims: new Claim[] {
-					new Claim("token", value)
+					new Claim("jti", value),
+					new Claim("sub", userid.ToString())
 				},
 				notBefore: DateTime.UtcNow,
 				signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)

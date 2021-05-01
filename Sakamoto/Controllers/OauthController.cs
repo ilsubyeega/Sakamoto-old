@@ -87,8 +87,8 @@ namespace Sakamoto.Controllers
 							var randomAccess = GenerateRandomUntilNotExists(false);
 							var randomRefresh = GenerateRandomUntilNotExists(true);
 
-							var accesstoken = JwtUtil.GenerateToken(randomAccess);
-							var refreshtoken = JwtUtil.GenerateRefreshToken(randomRefresh);
+							var accesstoken = JwtUtil.GenerateToken(access.UserId, randomAccess);
+							var refreshtoken = JwtUtil.GenerateRefreshToken(access.UserId, randomRefresh);
 
 							access.Revoked = true;
 							refresh.Revoked = true;
@@ -139,8 +139,8 @@ namespace Sakamoto.Controllers
 
 
 
-							var access = JwtUtil.GenerateToken(randomAccess);
-							var refresh = JwtUtil.GenerateRefreshToken(randomRefresh);
+							var access = JwtUtil.GenerateToken(user.Id, randomAccess);
+							var refresh = JwtUtil.GenerateRefreshToken(user.Id, randomRefresh);
 
 							var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 							_dbcontext.AccessTokens.Add(new DBAccessToken

@@ -79,7 +79,8 @@ namespace Sakamoto
 					OnTokenValidated = async context =>
 					{
 						var token = (JwtSecurityToken)context.SecurityToken;
-						var id = token.Claims.FirstOrDefault(claim => claim.Type == "token").Value;
+						var id = token.Id;
+
 						var dbcontext = context.HttpContext.RequestServices.GetRequiredService<MariaDBContext>();
 						var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 						var obj = await dbcontext.AccessTokens.FirstOrDefaultAsync(ac => ac.Id == id && ac.Revoked == false && ac.ExpiresAt > timestamp);
