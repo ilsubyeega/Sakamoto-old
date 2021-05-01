@@ -14,8 +14,8 @@ namespace Sakamoto.Enums
 		Unranked = 1 << 1,
 
 		Muted = 1 << 2,
-		Banned = 1 << 3,
+		Restricted = 1 << 3,
 
-		AutoBan = 1 << 4
+		AutoBan = 1 << 4,
 	}
 }
