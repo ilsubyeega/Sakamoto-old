@@ -27,7 +27,7 @@ namespace Sakamoto.Controllers.Submission
 		private readonly MariaDBContext _dbcontext;
 		public SoloScoreSubmissionController(MariaDBContext mariaDBContext) { _dbcontext = mariaDBContext; }
 
-		[HttpPost("solo/{beatmapId}/scores")]
+		[HttpPost("beatmaps/{beatmapId}/solo/scores")]
 		public async Task<IActionResult> CreateScore(int beatmapId, 
 			[FromForm(Name = "beatmap_hash")] string beatmapHash, 
 			[FromForm(Name = "ruleset_id")] int rulesetId, 
@@ -40,8 +40,10 @@ namespace Sakamoto.Controllers.Submission
 			var beatmap = _dbcontext.Beatmaps.Where(a => a.BeatmapId == beatmapId).FirstOrDefault();
 			if (beatmap == null) return StatusCode(404, "beatmap not found");
 
+			/*
 			if (beatmap.Checksum != beatmapHash)
 				return StatusCode(403, "Beatmap checksum isnt corrent.");
+			*/
 
 			if (rulesetId < 0 || rulesetId > 3)
 				return StatusCode(403, "Not allowed ruleset Id.");
@@ -50,7 +52,7 @@ namespace Sakamoto.Controllers.Submission
 			{
 				UserId = _user.Id,
 				BeatmapId = beatmapId,
-				BeatmapChecksum = beatmapHash,
+				//BeatmapChecksum = beatmapHash,
 				RulesetId = rulesetId,
 				StartedAt = DateTimeOffset.UtcNow
 			};
@@ -65,7 +67,7 @@ namespace Sakamoto.Controllers.Submission
 		}
 		[HttpPut]
 		[HttpPatch]
-		[Route("solo/{beatmapId}/scores/{scoreId}")]
+		[Route("beatmaps/{beatmapId}/solo/scores/{scoreId}")]
 		public async Task<IActionResult> UpdateScore(int beatmapId, int scoreId, [FromBody] SoloRequestedScoreInfo scoreInfo)
 		{
 			// This time, we wont do seed beatmap since it should be has.
