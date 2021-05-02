@@ -10,28 +10,30 @@ namespace Sakamoto.Util
 	public static class JwtUtil
 	{
 
-		public static string GenerateToken(int? userid, string value, Int32 expiresec = 86400)
+		public static string GenerateToken(int? userid, string value, long clientId, Int32 expiresec = 86400)
 		{
 			var key = new SymmetricSecurityKey(Common.GetKey());
 			var jwt = new JwtSecurityToken(issuer: "Sakamoto",
 				claims: new Claim[] {
-					new Claim("jti", value),
-					new Claim("sub", userid.ToString())
+					new Claim(JwtRegisteredClaimNames.Jti, value),
+					new Claim(JwtRegisteredClaimNames.Sub, userid.ToString())
 				},
+				audience: clientId.ToString(),
 				notBefore: DateTime.UtcNow,
 				expires: DateTime.UtcNow.AddSeconds(expiresec),
 				signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
 			);
 			return new JwtSecurityTokenHandler().WriteToken(jwt);
 		}
-		public static string GenerateRefreshToken(int? userid, string value, Int32 expiresec = 86400 * 30)
+		public static string GenerateRefreshToken(int? userid, string value, long clientId, Int32 expiresec = 86400 * 30)
 		{
 			var key = new SymmetricSecurityKey(Common.GetKey());
 			var jwt = new JwtSecurityToken(issuer: "Sakamoto",
 				claims: new Claim[] {
-					new Claim("jti", value),
-					new Claim("sub", userid.ToString())
+					new Claim(JwtRegisteredClaimNames.Jti, value),
+					new Claim(JwtRegisteredClaimNames.Sub, userid.ToString())
 				},
+				audience: clientId.ToString(),
 				notBefore: DateTime.UtcNow,
 				signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
 			);
