@@ -30,7 +30,7 @@ namespace Sakamoto.Controllers.Chat
 		
 		public IActionResult GetChannelList()
 		{
-			var channels = _dbcontext.Channels.Where(a => a.Type == (int)ChannelType.PUBLIC);
+			var channels = _dbcontext.Channels.Where(a => a.Type == (int)ChannelType.PUBLIC); //todo?
 			var list = new List<JsonChannel>();
 			foreach (var a in channels)
 			{
@@ -50,6 +50,10 @@ namespace Sakamoto.Controllers.Chat
 		public async Task<IActionResult> CreateChannel([FromForm] string type, [FromForm] int? target_id = null)
 		{
 			if (target_id == null) return StatusCode(422, "Targetid not provided.");
+			if (target_id == _user.Id) return StatusCode(401, "Cannot create channel by yourself.");
+			
+			var target = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == target_id);
+			if (target == null) return StatusCode(404, "User not found.");
 
 			var typeenum = (ChannelType?)Enum.Parse(typeof(ChannelType), type);
 			if (typeenum == null) return StatusCode(422, "ChannelType not found.");
@@ -57,7 +61,8 @@ namespace Sakamoto.Controllers.Chat
 
 			var userid = _user.Id;
 
-			var channel = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => a.UserId1 == userid || a.UserId2 == userid);
+			var channel = await _dbcontext.PMChannels
+				.FirstOrDefaultAsync(a => (a.UserId1 == userid && a.UserId2 == target_id) || (a.UserId1 == target_id && a.UserId2 == userid));
 			DBChannel chan;
 			if (channel == null) // if pm channel not found, create.
 			{
@@ -103,6 +108,7 @@ namespace Sakamoto.Controllers.Chat
 			jsonchannel.SetLastRead(0); // no idea :c
 			jsonchannel.IncludeMessages(messages.ToArray(), _dbcontext);
 			jsonchannel.IncludeUsers(new int[] { userid, target_id.Value });
+			jsonchannel.Name = target.UserName;
 			return StatusCode(200, jsonchannel);
 		}
 		[HttpPut("chat/channels/{channelid}/users/{userid}")]
@@ -120,7 +126,8 @@ namespace Sakamoto.Controllers.Chat
 				
 			}*/
 
-			var jsonchannel = channel.ToJsonChannel();
+			if (_dbcontext.UserChannels.Any(a => a.UserId == _user.Id && a.ChannelId == channel.ChannelId))
+				return StatusCode(200, channel.ToJsonChannel()); // already joined; at this case, just send channel information again.
 
 			var userchannel = new DBUserChannel
 			{
@@ -131,7 +138,7 @@ namespace Sakamoto.Controllers.Chat
 			};
 			_dbcontext.UserChannels.Add(userchannel);
 			await _dbcontext.SaveChangesAsync();
-			return StatusCode(200, jsonchannel);
+			return StatusCode(200, channel.ToJsonChannel());
 		}
 		[HttpDelete("chat/channels/{channelid}/users/{userid}")]
 		public async Task<IActionResult> LeaveChannel(int channelid, int userid)

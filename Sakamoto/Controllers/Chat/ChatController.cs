@@ -39,61 +39,76 @@ namespace Sakamoto.Controllers.Chat
 				
 			return StatusCode(200, list);
 		}
-		[HttpPost("chat/channels/{channel}/messages")]
-		public async Task<IActionResult> SendMessage(int channel, [FromForm] string message, [FromForm] bool is_action = false)
+		[HttpPost("chat/channels/{channel_id}/messages")]
+		public async Task<IActionResult> SendMessage(int channel_id, [FromForm] string message, [FromForm] bool is_action = false)
 		{
 			if (message == null) return StatusCode(402, "Message cannot be null.");
-			var userid = _user.Id;
-			var q = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == channel);
-			var qu = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == userid);
-			if (q == null) return StatusCode(404, "Channel not found");
-			var dbmsg = new DBMessage
+
+			var channel = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == channel_id);
+			if (channel == null) return StatusCode(404, "Channel not found");
+
+			var dbMessage = new DBMessage
 			{
-				UserId = userid,
-				ChannelId = q.ChannelId,
+				UserId = _user.Id,
+				ChannelId = channel.ChannelId,
 				Content = message,
 				IsAction = is_action,
 				Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
 			};
-			_dbcontext.Messages.Add(dbmsg);
+			_dbcontext.Messages.Add(dbMessage);
+
+			// If channel is PM, check target id is not registered at user channels and then add it.
+			if (channel.Type == (int)ChannelType.PM)
+			{
+				var pmchannel = _dbcontext.PMChannels.FirstOrDefault(a => a.ChannelId == channel.ChannelId);
+				var targetId = (_user.Id != pmchannel.UserId1) ? pmchannel.UserId1 : pmchannel.UserId2;
+				var targetUserChannel = _dbcontext.UserChannels.Any(a => a.ChannelId == channel.ChannelId && a.UserId == targetId);
+				if (targetUserChannel == null)
+				_dbcontext.UserChannels.Add(new DBUserChannel
+				{
+					UserId = targetId,
+					ChannelId = channel.ChannelId,
+					LastReadId = dbMessage.MessageId-1
+				});
+			}
+
 			await _dbcontext.SaveChangesAsync();
-			return StatusCode(200, dbmsg.ToJsonMessage().IncludeSender(qu));
+
+			return StatusCode(200, dbMessage.ToJsonMessage().IncludeSender(_user));
 		}
 		[HttpPost("chat/new")]
-		public async Task<IActionResult> SendMessagePrivate([FromForm] int target_id, [FromForm] string message, [FromForm] bool is_action = false)
+		public async Task<IActionResult> SendMessagePrivate([FromForm] int targetId, [FromForm] string message, [FromForm] bool is_action = false)
 		{
 			if (message == null) return StatusCode(402, "Message cannot be null.");
-			var userid = _user.Id;
-			var qq = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => (a.UserId1 == target_id && a.UserId2 == userid) 
-			|| (a.UserId1 == userid && a.UserId2 == target_id));
+			var qq = await _dbcontext.PMChannels.FirstOrDefaultAsync(a => (a.UserId1 == targetId && a.UserId2 == _user.Id) 
+			|| (a.UserId1 == _user.Id && a.UserId2 == targetId));
 			if (qq == null) return StatusCode(404, "channel not found. should create this");
-			var q = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == qq.ChannelId);
-			var qu = await _dbcontext.Users.FirstOrDefaultAsync(a => a.Id == userid);
-			if (q == null) return StatusCode(404, "Channel not found");
-			var dbmsg = new DBMessage
+			var channel = await _dbcontext.Channels.FirstOrDefaultAsync(a => a.ChannelId == qq.ChannelId);
+			if (channel == null) return StatusCode(404, "Channel not found");
+			var dbMessage = new DBMessage
 			{
-				UserId = userid,
-				ChannelId = q.ChannelId,
+				UserId = _user.Id,
+				ChannelId = channel.ChannelId,
 				Content = message,
 				IsAction = is_action,
 				Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
 			};
-			_dbcontext.Messages.Add(dbmsg);
+			_dbcontext.Messages.Add(dbMessage);
 
 			await _dbcontext.SaveChangesAsync();
 
-			var uc = _dbcontext.UserChannels.FirstOrDefault(a => a.UserId == target_id && a.ChannelId == q.ChannelId);
+			var uc = _dbcontext.UserChannels.FirstOrDefault(a => a.UserId == targetId && a.ChannelId == channel.ChannelId);
 			if (uc == null)
 			{
 				_dbcontext.UserChannels.Add(new DBUserChannel
 				{
-					UserId = target_id,
-					ChannelId = q.ChannelId,
-					LastReadId = dbmsg.MessageId
+					UserId = targetId,
+					ChannelId = channel.ChannelId,
+					LastReadId = dbMessage.MessageId
 				});
 				await _dbcontext.SaveChangesAsync();
 			}
-			return StatusCode(200, dbmsg.ToJsonMessage().IncludeSender(qu));
+			return StatusCode(200, dbMessage.ToJsonMessage().IncludeSender(_user));
 		}
 		[HttpGet("chat/updates")]
 		public async Task<IActionResult> GetUpdates(int since, int channel_id = -1, int limit = 50)
@@ -122,6 +137,8 @@ namespace Sakamoto.Controllers.Chat
 					var pm = _dbcontext.PMChannels.FirstOrDefault(v => v.ChannelId == a.ChannelId);
 					if (pm == null) continue;
 					jsc.IncludeUsers(new int[] { pm.UserId1, pm.UserId2 });
+					jsc.Name = (userid != pm.UserId1) ? 
+						_user.UserName : _dbcontext.Users.FirstOrDefault(a => a.Id == pm.UserId2)?.UserName ?? jsc.Name;
 				}
 				jsonpresences.Add(jsc);
 			}

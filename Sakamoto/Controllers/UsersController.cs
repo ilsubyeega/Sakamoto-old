@@ -42,21 +42,15 @@ namespace Sakamoto.Controllers
 		/// </summary>
 		/// <param name="ids">User id to be returned. Specify once for each user id requested. Up to 50 users can be requested at once.</param>
 		[HttpGet("users/")]
-		public async Task<IActionResult> UserArray([FromQuery(Name = "ids[]")] int[] ids)
+		public async Task<IActionResult> UserArray([FromQuery(Name = "ids[]")] List<int> ids)
 		{
-			if (ids.Length == 0) return StatusCode(401, Error("Bad request. (No array)"));
-			var list = new List<int>(ids);
-			var user = await _dbcontext.Users.Where(a => list.Contains(a.Id)).ToArrayAsync();
-			var userstats = await _dbcontext.UserStats.Where(a => list.Contains(a.UserId)).ToArrayAsync();
+			if (ids.Count == 0) return StatusCode(403, Error("Bad request. (No array)"));
+			var user = await _dbcontext.Users.Where(a => ids.Contains(a.Id)).ToArrayAsync();
 
-			var rs = new List<JsonUser>();
-			foreach (var o in user)
+			return StatusCode(200, new
 			{
-				var us = userstats.FirstOrDefault(a => a.UserId == o.Id);
-				if (us == null) continue;
-				rs.Add(o.ToUser(us));
-			}
-			return StatusCode(200, rs);
+				users = user.Select(a => a.ToUserCompact()).ToArray()
+			});
 		}
 
 
