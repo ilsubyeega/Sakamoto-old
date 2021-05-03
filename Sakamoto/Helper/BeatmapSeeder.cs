@@ -132,6 +132,9 @@ namespace Sakamoto.Helper
 			var rs = await OsuApi.TryReqeust(BeatmapFetchUrl(bc.Id));
 			if (rs == null) return null; // this should be exist since it has beatmapcompact from beatmapset.
 			JsonBeatmap b = JsonConvert.DeserializeObject<JsonBeatmap>(rs);
+			
+			if (b.Version.Length == 0) return null; // somehow ppy made inital value of beatmap, so we need to ignore it because no data found.
+
 			var beatmap = new DBBeatmap
 			{
 				BeatmapsetId = b.BeatmapSetId,
