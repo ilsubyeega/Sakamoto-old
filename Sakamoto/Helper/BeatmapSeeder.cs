@@ -154,7 +154,7 @@ namespace Sakamoto.Helper
 				CountNormal = b.CountCircles,
 				CountSlider = b.CountSliders,
 				CountSpinner = b.CountSpinners,
-				BPM = b.BPM,
+				BPM = b.BPM.Value,
 				PlayCount = 0,
 				PlayMode = (byte)b.Mode,
 				UpdatedDate = ParseTime(b.LastUpdated).ToUnixTimeSeconds(),

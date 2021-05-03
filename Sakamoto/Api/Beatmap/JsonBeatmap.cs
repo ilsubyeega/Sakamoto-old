@@ -44,7 +44,7 @@ namespace Sakamoto.Api
 		[JsonProperty("beatmapset_id")]
 		public int BeatmapSetId;
 		[JsonProperty("bpm")]
-		public float BPM;
+		public float? BPM;
 		[JsonProperty("convert")]
 		public bool Convert;
 		[JsonProperty("count_circles")]
